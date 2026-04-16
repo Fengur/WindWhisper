@@ -19,11 +19,21 @@ targets:
           - $(PROJECT_DIR)/Libraries
         OTHER_LDFLAGS:
           - -lmicvol
+          - -lwhisper
+          - -lggml
+          - -lggml-base
+          - -lggml-cpu
+          - -lggml-blas
+          - -lggml-metal
           - -framework CoreAudio
           - -framework AudioToolbox
           - -framework CoreFoundation
           - -framework AVFoundation
           - -framework Carbon
+          - -framework Metal
+          - -framework MetalKit
+          - -framework Accelerate
+          - -lstdc++
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.fengur.WindWhisper
         MARKETING_VERSION: "0.1.0"

@@ -3,7 +3,6 @@
 
 #include "micvol.h"
 
-// TODO: 集成 whisper.cpp 后取消注释
-// #include "whisper.h"
+#include "whisper.h"
 
 #endif
