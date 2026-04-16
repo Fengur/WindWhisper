@@ -1,0 +1,392 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		11D1DD62D99237D954219C4C /* WhisperBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */; };
+		1F89D6FBE5A9444721FF8B7C /* MicvolBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7658080BC3C17AECB204DDA /* MicvolBridge.swift */; };
+		4730F3E47ECA0C1228305A75 /* TextInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C916F7582D7E8643851867D /* TextInjector.swift */; };
+		88B418BDF54421EBF2A6F307 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FFF4FE6B912E760B9FF129 /* HotkeyManager.swift */; };
+		C1F862C564161BC658A20EE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C1373133D92047B44E25ED /* AppDelegate.swift */; };
+		C6580FA0A2D955489046A922 /* WhisperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */; };
+		E5407D5913835B9D30C244CC /* WindWhisperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */; };
+		E7AA9C27A41C52D1DA70372D /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8CDA8D612B444E75007CA /* StatusBarView.swift */; };
+		F8FB5D46E82DA1E60EB19409 /* VoiceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FA79D8FFE3F3C2D456B69 /* VoiceEngine.swift */; };
+		FE538976D208DB1F8ED2E408 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91A0090DED398FA5CF100F2 /* AudioRecorder.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindWhisperApp.swift; sourceTree = "<group>"; };
+		3C916F7582D7E8643851867D /* TextInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInjector.swift; sourceTree = "<group>"; };
+		54CBE295F8EA76C5F9DB6EBF /* WindWhisper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindWhisper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AC8CDA8D612B444E75007CA /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
+		92C1373133D92047B44E25ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		940FA79D8FFE3F3C2D456B69 /* VoiceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceEngine.swift; sourceTree = "<group>"; };
+		A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperBridge.swift; sourceTree = "<group>"; };
+		B5FFF4FE6B912E760B9FF129 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
+		B91A0090DED398FA5CF100F2 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		C7658080BC3C17AECB204DDA /* MicvolBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicvolBridge.swift; sourceTree = "<group>"; };
+		E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		274C1893F88A38EE79857146 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				92C1373133D92047B44E25ED /* AppDelegate.swift */,
+				940FA79D8FFE3F3C2D456B69 /* VoiceEngine.swift */,
+				11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2B34D7D3BDB1CC70768F44A6 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				B5FFF4FE6B912E760B9FF129 /* HotkeyManager.swift */,
+				3C916F7582D7E8643851867D /* TextInjector.swift */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
+		2FB741EC0C66BB05A068EFE4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				54CBE295F8EA76C5F9DB6EBF /* WindWhisper.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6CCC782C01A0C6F7E6D901CD = {
+			isa = PBXGroup;
+			children = (
+				A2652451CF48E902834A7ADC /* WindWhisper */,
+				2FB741EC0C66BB05A068EFE4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		748DF6336F0998AA9C12F74E /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				5AC8CDA8D612B444E75007CA /* StatusBarView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		821C9277525D95029B3D9178 /* Recognition */ = {
+			isa = PBXGroup;
+			children = (
+				A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */,
+				E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */,
+			);
+			path = Recognition;
+			sourceTree = "<group>";
+		};
+		A2652451CF48E902834A7ADC /* WindWhisper */ = {
+			isa = PBXGroup;
+			children = (
+				274C1893F88A38EE79857146 /* App */,
+				F84A86B3470EC9A1E2A28DB8 /* Audio */,
+				2B34D7D3BDB1CC70768F44A6 /* Input */,
+				821C9277525D95029B3D9178 /* Recognition */,
+				748DF6336F0998AA9C12F74E /* UI */,
+			);
+			path = WindWhisper;
+			sourceTree = "<group>";
+		};
+		F84A86B3470EC9A1E2A28DB8 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				B91A0090DED398FA5CF100F2 /* AudioRecorder.swift */,
+				C7658080BC3C17AECB204DDA /* MicvolBridge.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F76C9943D78977F8B38F6864 /* WindWhisper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2673E239919B6977704BF949 /* Build configuration list for PBXNativeTarget "WindWhisper" */;
+			buildPhases = (
+				55109D646746942FE931C5C2 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WindWhisper;
+			packageProductDependencies = (
+			);
+			productName = WindWhisper;
+			productReference = 54CBE295F8EA76C5F9DB6EBF /* WindWhisper.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C9C76657712F9BC993AF260D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 2431E95BD6EB5CF88B005C76 /* Build configuration list for PBXProject "WindWhisper" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 6CCC782C01A0C6F7E6D901CD;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2FB741EC0C66BB05A068EFE4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F76C9943D78977F8B38F6864 /* WindWhisper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		55109D646746942FE931C5C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1F862C564161BC658A20EE0 /* AppDelegate.swift in Sources */,
+				FE538976D208DB1F8ED2E408 /* AudioRecorder.swift in Sources */,
+				88B418BDF54421EBF2A6F307 /* HotkeyManager.swift in Sources */,
+				1F89D6FBE5A9444721FF8B7C /* MicvolBridge.swift in Sources */,
+				E7AA9C27A41C52D1DA70372D /* StatusBarView.swift in Sources */,
+				4730F3E47ECA0C1228305A75 /* TextInjector.swift in Sources */,
+				F8FB5D46E82DA1E60EB19409 /* VoiceEngine.swift in Sources */,
+				11D1DD62D99237D954219C4C /* WhisperBridge.swift in Sources */,
+				C6580FA0A2D955489046A922 /* WhisperManager.swift in Sources */,
+				E5407D5913835B9D30C244CC /* WindWhisperApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		07B266910671270B170F6DDE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Libraries",
+				);
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "WindWhisper needs microphone access for voice input.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Libraries",
+				);
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = (
+					"-lmicvol",
+					"-framework CoreAudio",
+					"-framework AudioToolbox",
+					"-framework CoreFoundation",
+					"-framework AVFoundation",
+					"-framework Carbon",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.fengur.WindWhisper;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "WindWhisper-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		7E4880D39CBEA04D4D15FB6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		7E52CF83B06D044A7E5B6D4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Libraries",
+				);
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "WindWhisper needs microphone access for voice input.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Libraries",
+				);
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = (
+					"-lmicvol",
+					"-framework CoreAudio",
+					"-framework AudioToolbox",
+					"-framework CoreFoundation",
+					"-framework AVFoundation",
+					"-framework Carbon",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.fengur.WindWhisper;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "WindWhisper-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+		E97E9B87E950673CEF788FE5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2431E95BD6EB5CF88B005C76 /* Build configuration list for PBXProject "WindWhisper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E4880D39CBEA04D4D15FB6A /* Debug */,
+				E97E9B87E950673CEF788FE5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2673E239919B6977704BF949 /* Build configuration list for PBXNativeTarget "WindWhisper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E52CF83B06D044A7E5B6D4E /* Debug */,
+				07B266910671270B170F6DDE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C9C76657712F9BC993AF260D /* Project object */;
+}
