@@ -7,7 +7,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let voiceEngine = VoiceEngine.shared
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // 隐藏 Dock 图标
         NSApp.setActivationPolicy(.accessory)
 
         setupStatusItem()
@@ -20,12 +19,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "mic", accessibilityDescription: "WindWhisper")
-            button.action = #selector(onStatusItemClick)
+            button.image = NSImage(systemSymbolName: "wind", accessibilityDescription: "WindWhisper")
+            button.toolTip = "WindWhisper — 点击录音 / 右键菜单"
             button.target = self
+            button.action = #selector(onLeftClick)
         }
 
-        // 监听录音状态变化，更新图标
+        // 右键菜单通过 event monitor
+        NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [weak self] event in
+            if let button = self?.statusItem.button, button.hitTest(event.locationInWindow) != nil {
+                self?.onRightClick()
+                return nil
+            }
+            return event
+        }
+
         voiceEngine.onStateChange = { [weak self] state in
             DispatchQueue.main.async {
                 self?.updateIcon(state)
@@ -42,35 +50,76 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
     }
 
-    @objc private func onStatusItemClick() {
-        guard let button = statusItem.button else { return }
+    @objc private func onLeftClick() {
+        print("[WindWhisper] Left click → toggle")
+        voiceEngine.toggle()
+    }
 
-        if NSEvent.modifierFlags.contains(.option) {
-            // Option + 点击 = 打开面板
-            if popover.isShown {
-                popover.performClose(nil)
-            } else {
-                popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-            }
-        } else {
-            // 普通点击 = 切换录音
-            voiceEngine.toggle()
+    @objc private func onRightClick() {
+        guard let button = statusItem.button else { return }
+        showMenu(from: button)
+    }
+
+    private func showMenu(from button: NSStatusBarButton) {
+        let menu = NSMenu()
+
+        let stateText: String
+        switch voiceEngine.state {
+        case .idle: stateText = "就绪"
+        case .recording: stateText = "录音中..."
+        case .transcribing: stateText = "识别中..."
         }
+        let stateItem = NSMenuItem(title: "状态: \(stateText)", action: nil, keyEquivalent: "")
+        stateItem.isEnabled = false
+        menu.addItem(stateItem)
+
+        if !voiceEngine.lastText.isEmpty {
+            let lastItem = NSMenuItem(title: "上次: \(voiceEngine.lastText.prefix(30))", action: nil, keyEquivalent: "")
+            lastItem.isEnabled = false
+            menu.addItem(lastItem)
+        }
+
+        menu.addItem(NSMenuItem.separator())
+
+        let toggleTitle = voiceEngine.state == .recording ? "停止录音" : "开始录音"
+        menu.addItem(NSMenuItem(title: toggleTitle, action: #selector(toggleRecording), keyEquivalent: "r"))
+
+        menu.addItem(NSMenuItem.separator())
+
+        let hotkeyItem = NSMenuItem(title: "快捷键: Cmd+Opt+R", action: nil, keyEquivalent: "")
+        hotkeyItem.isEnabled = false
+        menu.addItem(hotkeyItem)
+
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "退出 WindWhisper", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+
+        statusItem.menu = menu
+        button.performClick(nil)
+        statusItem.menu = nil // 用完清掉，下次左键点击才不会弹菜单
+    }
+
+    @objc private func toggleRecording() {
+        voiceEngine.toggle()
     }
 
     private func updateIcon(_ state: VoiceEngine.State) {
         let iconName: String
+        let tooltip: String
         switch state {
         case .idle:
-            iconName = "mic"
+            iconName = "wind"
+            tooltip = "WindWhisper — 点击录音"
         case .recording:
-            iconName = "mic.fill"
+            iconName = "wind.circle.fill"
+            tooltip = "WindWhisper — 录音中，点击停止"
         case .transcribing:
-            iconName = "ellipsis.circle"
+            iconName = "wind.snow"
+            tooltip = "WindWhisper — 识别中..."
         }
         statusItem.button?.image = NSImage(
             systemSymbolName: iconName,
             accessibilityDescription: "WindWhisper"
         )
+        statusItem.button?.toolTip = tooltip
     }
 }
