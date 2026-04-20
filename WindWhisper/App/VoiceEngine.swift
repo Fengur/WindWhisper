@@ -105,6 +105,8 @@ class VoiceEngine: ObservableObject {
                 self.widget.showFinal(text) {
                     self.injector.inject(text: text)
                 }
+            } else {
+                self.widget.collapse()
             }
             self.setState(.idle)
         }
