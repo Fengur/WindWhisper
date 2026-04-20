@@ -42,7 +42,7 @@ struct StatusBarView: View {
             .disabled(engine.state == .transcribing)
 
             // 快捷键提示
-            Text("Cmd + Opt + R")
+            Text(HotkeyConfig.load().displayString)
                 .font(.caption)
                 .foregroundColor(.secondary)
 

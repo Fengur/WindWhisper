@@ -86,8 +86,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(NSMenuItem.separator())
 
-        let hotkeyItem = NSMenuItem(title: "快捷键: Cmd+Opt+R", action: nil, keyEquivalent: "")
-        hotkeyItem.isEnabled = false
+        let config = HotkeyConfig.load()
+        let hotkeyItem = NSMenuItem(title: "快捷键: \(config.displayString)...", action: #selector(openHotkeySettings), keyEquivalent: "")
+        hotkeyItem.target = self
         menu.addItem(hotkeyItem)
 
         menu.addItem(NSMenuItem.separator())
@@ -100,6 +101,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func toggleRecording() {
         voiceEngine.toggle()
+    }
+
+    @objc private func openHotkeySettings() {
+        SettingsWindowController.shared.show()
     }
 
     private func updateIcon(_ state: VoiceEngine.State) {

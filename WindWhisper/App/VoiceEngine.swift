@@ -18,7 +18,10 @@ class VoiceEngine: ObservableObject {
     private let recorder = AudioRecorder()
     private let whisper = WhisperManager()
     private let injector = TextInjector()
+    private let panelController = FloatingPanelController()
     private var micvolGuard: OpaquePointer?
+    private var interimTimer: Timer?
+    private var isInterimInFlight = false
 
     private init() {}
 
@@ -29,14 +32,13 @@ class VoiceEngine: ObservableObject {
         case .recording:
             stopAndTranscribe()
         case .transcribing:
-            break // 识别中不响应
+            break
         }
     }
 
     private func startRecording() {
         setState(.recording)
 
-        // 拉满输入音量
         do {
             let device = try MicvolBridge.defaultInputDevice()
             micvolGuard = try MicvolBridge.guardMaximize(deviceId: device.id)
@@ -45,31 +47,57 @@ class VoiceEngine: ObservableObject {
         }
 
         recorder.start()
+        panelController.show()
+        startInterimLoop()
+    }
+
+    private func startInterimLoop() {
+        interimTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+            self?.runInterimTranscription()
+        }
+    }
+
+    private func runInterimTranscription() {
+        guard !isInterimInFlight else { return }
+
+        let pcmSnapshot = recorder.snapshot()
+        guard pcmSnapshot.count > 8000 else { return }
+
+        isInterimInFlight = true
+        whisper.transcribeAsync(pcmData: pcmSnapshot) { [weak self] text in
+            guard let self else { return }
+            self.isInterimInFlight = false
+            if self.state == .recording && !text.isEmpty {
+                self.panelController.updateText(text)
+            }
+        }
     }
 
     private func stopAndTranscribe() {
+        interimTimer?.invalidate()
+        interimTimer = nil
+
         let pcmBuffer = recorder.stop()
 
-        // 恢复音量
         if let guard_ = micvolGuard {
             try? MicvolBridge.guardRestore(guard_)
             micvolGuard = nil
         }
 
         setState(.transcribing)
+        panelController.updateText("识别中...")
 
-        // 后台识别
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        whisper.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
             guard let self else { return }
-            let text = self.whisper.transcribe(pcmData: pcmBuffer)
-
-            DispatchQueue.main.async {
-                if !text.isEmpty {
-                    self.lastText = text
+            if !text.isEmpty {
+                self.lastText = text
+                self.panelController.showFinal(text) {
                     self.injector.inject(text: text)
                 }
-                self.setState(.idle)
+            } else {
+                self.panelController.hide()
             }
+            self.setState(.idle)
         }
     }
 

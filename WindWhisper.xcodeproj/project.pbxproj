@@ -7,10 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0CF80188C17FC52DA777DCF1 /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */; };
 		11D1DD62D99237D954219C4C /* WhisperBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */; };
 		12DA2BF01B38B4FD4C4C5928 /* ggml-base.bin in Resources */ = {isa = PBXBuildFile; fileRef = DBF3589E573657145AC4CBA4 /* ggml-base.bin */; };
 		1F89D6FBE5A9444721FF8B7C /* MicvolBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7658080BC3C17AECB204DDA /* MicvolBridge.swift */; };
 		4730F3E47ECA0C1228305A75 /* TextInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C916F7582D7E8643851867D /* TextInjector.swift */; };
+		5DF2D35E79FB77A64FBA8490 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA92BEDC8C24ECD3CBEE025F /* FloatingPanel.swift */; };
+		73048D9F0F41825D7684EE5E /* HotkeyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD67540B10B84FED26415B /* HotkeyConfig.swift */; };
 		88B418BDF54421EBF2A6F307 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FFF4FE6B912E760B9FF129 /* HotkeyManager.swift */; };
 		C1F862C564161BC658A20EE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C1373133D92047B44E25ED /* AppDelegate.swift */; };
 		C6580FA0A2D955489046A922 /* WhisperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */; };
@@ -25,6 +28,7 @@
 		3C916F7582D7E8643851867D /* TextInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInjector.swift; sourceTree = "<group>"; };
 		54CBE295F8EA76C5F9DB6EBF /* WindWhisper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindWhisper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AC8CDA8D612B444E75007CA /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
+		62CD67540B10B84FED26415B /* HotkeyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyConfig.swift; sourceTree = "<group>"; };
 		92C1373133D92047B44E25ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		940FA79D8FFE3F3C2D456B69 /* VoiceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceEngine.swift; sourceTree = "<group>"; };
 		A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperBridge.swift; sourceTree = "<group>"; };
@@ -33,6 +37,8 @@
 		C7658080BC3C17AECB204DDA /* MicvolBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicvolBridge.swift; sourceTree = "<group>"; };
 		DBF3589E573657145AC4CBA4 /* ggml-base.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-base.bin"; sourceTree = "<group>"; };
 		E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperManager.swift; sourceTree = "<group>"; };
+		EA92BEDC8C24ECD3CBEE025F /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
+		EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -49,6 +55,7 @@
 		2B34D7D3BDB1CC70768F44A6 /* Input */ = {
 			isa = PBXGroup;
 			children = (
+				62CD67540B10B84FED26415B /* HotkeyConfig.swift */,
 				B5FFF4FE6B912E760B9FF129 /* HotkeyManager.swift */,
 				3C916F7582D7E8643851867D /* TextInjector.swift */,
 			);
@@ -74,6 +81,8 @@
 		748DF6336F0998AA9C12F74E /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				EA92BEDC8C24ECD3CBEE025F /* FloatingPanel.swift */,
+				EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */,
 				5AC8CDA8D612B444E75007CA /* StatusBarView.swift */,
 			);
 			path = UI;
@@ -187,8 +196,11 @@
 			files = (
 				C1F862C564161BC658A20EE0 /* AppDelegate.swift in Sources */,
 				FE538976D208DB1F8ED2E408 /* AudioRecorder.swift in Sources */,
+				5DF2D35E79FB77A64FBA8490 /* FloatingPanel.swift in Sources */,
+				73048D9F0F41825D7684EE5E /* HotkeyConfig.swift in Sources */,
 				88B418BDF54421EBF2A6F307 /* HotkeyManager.swift in Sources */,
 				1F89D6FBE5A9444721FF8B7C /* MicvolBridge.swift in Sources */,
+				0CF80188C17FC52DA777DCF1 /* SettingsWindow.swift in Sources */,
 				E7AA9C27A41C52D1DA70372D /* StatusBarView.swift in Sources */,
 				4730F3E47ECA0C1228305A75 /* TextInjector.swift in Sources */,
 				F8FB5D46E82DA1E60EB19409 /* VoiceEngine.swift in Sources */,
