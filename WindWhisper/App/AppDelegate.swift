@@ -24,7 +24,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "wind", accessibilityDescription: "WindWhisper")
+            if let img = NSImage(named: "icon_statusbar") {
+                img.size = NSSize(width: 18, height: 18)
+                img.isTemplate = true
+                button.image = img
+            }
             button.toolTip = "WindWhisper — 点击录音 / 右键菜单"
             button.target = self
             button.action = #selector(onLeftClick)
@@ -115,23 +119,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func updateIcon(_ state: VoiceEngine.State) {
-        let iconName: String
         let tooltip: String
         switch state {
         case .idle:
-            iconName = "wind"
             tooltip = "WindWhisper — 点击录音"
+            statusItem.button?.contentTintColor = nil
         case .recording:
-            iconName = "wind.circle.fill"
             tooltip = "WindWhisper — 录音中，点击停止"
+            statusItem.button?.contentTintColor = .systemRed
         case .transcribing:
-            iconName = "wind.snow"
             tooltip = "WindWhisper — 识别中..."
+            statusItem.button?.contentTintColor = .systemOrange
         }
-        statusItem.button?.image = NSImage(
-            systemSymbolName: iconName,
-            accessibilityDescription: "WindWhisper"
-        )
         statusItem.button?.toolTip = tooltip
     }
 }

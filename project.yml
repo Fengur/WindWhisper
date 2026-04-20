@@ -47,3 +47,4 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_KEY_NSMicrophoneUsageDescription: "WindWhisper needs microphone access for voice input."
         INFOPLIST_KEY_LSUIElement: true
+        INFOPLIST_KEY_CFBundleIconFile: AppIcon

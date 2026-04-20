@@ -12,13 +12,18 @@
 		12DA2BF01B38B4FD4C4C5928 /* ggml-base.bin in Resources */ = {isa = PBXBuildFile; fileRef = DBF3589E573657145AC4CBA4 /* ggml-base.bin */; };
 		1463C8D6C8935AC7123088B0 /* DoubleTapTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAC9BEFF1A705821E5B89AF /* DoubleTapTrigger.swift */; };
 		1F89D6FBE5A9444721FF8B7C /* MicvolBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7658080BC3C17AECB204DDA /* MicvolBridge.swift */; };
+		29F2B97CA2E283BC40ADF005 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 46CCB2F13F5FA6B3DB3083B7 /* AppIcon.icns */; };
 		2D58820936377A602448C6A9 /* TextPostProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463E255E992C32B660176F89 /* TextPostProcessor.swift */; };
 		3F50B76115BB19B5E312FE98 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A7CBFF5343FF0F31C1FD07 /* Logger.swift */; };
 		4730F3E47ECA0C1228305A75 /* TextInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C916F7582D7E8643851867D /* TextInjector.swift */; };
+		4E621523290FCEDE84EDEAD0 /* icon_statusbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D323BCB593F013A72CEF772 /* icon_statusbar.png */; };
 		4F01BCC24681F8D7025EA6FE /* ggml-small.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7EC3F7F46014800CCBDAE30E /* ggml-small.bin */; };
+		6661EBB73566F2885B413F34 /* icon_widget.png in Resources */ = {isa = PBXBuildFile; fileRef = C59BFE2C4C7A8A1B31D08372 /* icon_widget.png */; };
+		8D8CFE01DE7D43B9224925FA /* icon_statusbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */; };
 		C1B418A19531DB97DBB022E3 /* FloatingWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DAC32ACF7B7A1D7C7D3EA9 /* FloatingWidget.swift */; };
 		C1F862C564161BC658A20EE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C1373133D92047B44E25ED /* AppDelegate.swift */; };
 		C6580FA0A2D955489046A922 /* WhisperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */; };
+		C675ED6733E8BCE019F95A6A /* icon_widget@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E15B8B527A7C774DB93F724B /* icon_widget@2x.png */; };
 		E5407D5913835B9D30C244CC /* WindWhisperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */; };
 		E7AA9C27A41C52D1DA70372D /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8CDA8D612B444E75007CA /* StatusBarView.swift */; };
 		ED7B7256AA349F3B28AAD4A0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F17991C5A3DA152AFF7D269F /* SnapKit */; };
@@ -31,17 +36,22 @@
 		11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindWhisperApp.swift; sourceTree = "<group>"; };
 		3C916F7582D7E8643851867D /* TextInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInjector.swift; sourceTree = "<group>"; };
 		463E255E992C32B660176F89 /* TextPostProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPostProcessor.swift; sourceTree = "<group>"; };
+		46CCB2F13F5FA6B3DB3083B7 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		54CBE295F8EA76C5F9DB6EBF /* WindWhisper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindWhisper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AC8CDA8D612B444E75007CA /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
 		78DAC32ACF7B7A1D7C7D3EA9 /* FloatingWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingWidget.swift; sourceTree = "<group>"; };
 		7EC3F7F46014800CCBDAE30E /* ggml-small.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-small.bin"; sourceTree = "<group>"; };
+		8D323BCB593F013A72CEF772 /* icon_statusbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_statusbar.png; sourceTree = "<group>"; };
 		92C1373133D92047B44E25ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		940FA79D8FFE3F3C2D456B69 /* VoiceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceEngine.swift; sourceTree = "<group>"; };
 		97A7CBFF5343FF0F31C1FD07 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperBridge.swift; sourceTree = "<group>"; };
 		B91A0090DED398FA5CF100F2 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		C59BFE2C4C7A8A1B31D08372 /* icon_widget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_widget.png; sourceTree = "<group>"; };
 		C7658080BC3C17AECB204DDA /* MicvolBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicvolBridge.swift; sourceTree = "<group>"; };
 		DBF3589E573657145AC4CBA4 /* ggml-base.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-base.bin"; sourceTree = "<group>"; };
+		E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_statusbar@2x.png"; sourceTree = "<group>"; };
+		E15B8B527A7C774DB93F724B /* icon_widget@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_widget@2x.png"; sourceTree = "<group>"; };
 		E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperManager.swift; sourceTree = "<group>"; };
 		EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,8 +140,13 @@
 		D3B1B51D549203CE8E3533E5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				46CCB2F13F5FA6B3DB3083B7 /* AppIcon.icns */,
 				DBF3589E573657145AC4CBA4 /* ggml-base.bin */,
 				7EC3F7F46014800CCBDAE30E /* ggml-small.bin */,
+				8D323BCB593F013A72CEF772 /* icon_statusbar.png */,
+				E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */,
+				C59BFE2C4C7A8A1B31D08372 /* icon_widget.png */,
+				E15B8B527A7C774DB93F724B /* icon_widget@2x.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -206,8 +221,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29F2B97CA2E283BC40ADF005 /* AppIcon.icns in Resources */,
 				12DA2BF01B38B4FD4C4C5928 /* ggml-base.bin in Resources */,
 				4F01BCC24681F8D7025EA6FE /* ggml-small.bin in Resources */,
+				4E621523290FCEDE84EDEAD0 /* icon_statusbar.png in Resources */,
+				8D8CFE01DE7D43B9224925FA /* icon_statusbar@2x.png in Resources */,
+				6661EBB73566F2885B413F34 /* icon_widget.png in Resources */,
+				C675ED6733E8BCE019F95A6A /* icon_widget@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +268,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Libraries",
 				);
+				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "WindWhisper needs microphone access for voice input.";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -355,6 +376,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Libraries",
 				);
+				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "WindWhisper needs microphone access for voice input.";
 				LD_RUNPATH_SEARCH_PATHS = (
