@@ -1,6 +1,5 @@
 import Foundation
 
-/// 语音输入核心引擎，串联录音 → 识别 → 注入。
 class VoiceEngine: ObservableObject {
     static let shared = VoiceEngine()
 
@@ -22,6 +21,10 @@ class VoiceEngine: ObservableObject {
     private var micvolGuard: OpaquePointer?
     private var interimTimer: Timer?
     private var isInterimInFlight = false
+
+    static var autoPaste: Bool {
+        UserDefaults.standard.object(forKey: "autoPaste") as? Bool ?? true
+    }
 
     private init() {}
 
@@ -102,7 +105,8 @@ class VoiceEngine: ObservableObject {
             Log.info("Final transcription done (\(elapsed)s): \(text)")
             if !text.isEmpty {
                 self.lastText = text
-                self.widget.showFinal(text) {
+                self.widget.showResult(text)
+                if Self.autoPaste {
                     self.injector.inject(text: text)
                 }
             } else {
