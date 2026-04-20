@@ -15,6 +15,8 @@ targets:
     platform: macOS
     dependencies:
       - package: SnapKit
+      - framework: Libraries/sherpa-onnx.xcframework
+        embed: false
     sources:
       - WindWhisper
     settings:
@@ -22,6 +24,7 @@ targets:
         SWIFT_OBJC_BRIDGING_HEADER: WindWhisper-Bridging-Header.h
         HEADER_SEARCH_PATHS:
           - $(PROJECT_DIR)/Libraries
+          - $(PROJECT_DIR)/Libraries/sherpa-onnx.xcframework/macos-arm64_x86_64/Headers
         LIBRARY_SEARCH_PATHS:
           - $(PROJECT_DIR)/Libraries
         OTHER_LDFLAGS:
@@ -32,6 +35,7 @@ targets:
           - -lggml-cpu
           - -lggml-blas
           - -lggml-metal
+          - -lonnxruntime
           - -framework CoreAudio
           - -framework AudioToolbox
           - -framework CoreFoundation
@@ -40,6 +44,7 @@ targets:
           - -framework Metal
           - -framework MetalKit
           - -framework Accelerate
+          - -framework CoreML
           - -lstdc++
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.fengur.WindWhisper

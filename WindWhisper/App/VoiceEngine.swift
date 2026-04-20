@@ -15,7 +15,7 @@ class VoiceEngine: ObservableObject {
     var onStateChange: ((State) -> Void)?
 
     private let recorder = AudioRecorder()
-    private let whisper = WhisperManager()
+    private let recognition = RecognitionManager()
     private let injector = TextInjector()
     let widget = FloatingWidgetController()
     private var micvolGuard: OpaquePointer?
@@ -71,7 +71,7 @@ class VoiceEngine: ObservableObject {
 
         isInterimInFlight = true
         let startTime = CFAbsoluteTimeGetCurrent()
-        whisper.transcribeAsync(pcmData: pcmSnapshot) { [weak self] text in
+        recognition.transcribeAsync(pcmData: pcmSnapshot) { [weak self] text in
             guard let self else { return }
             let elapsed = String(format: "%.1f", CFAbsoluteTimeGetCurrent() - startTime)
             Log.info("Interim transcription done (\(elapsed)s): \(text.prefix(50))")
@@ -81,6 +81,7 @@ class VoiceEngine: ObservableObject {
             }
         }
     }
+
 
     private func stopAndTranscribe() {
         interimTimer?.invalidate()
@@ -99,7 +100,7 @@ class VoiceEngine: ObservableObject {
         let audioDuration = String(format: "%.1f", Double(pcmBuffer.count) / 16000.0)
         Log.info("Final transcription start (\(audioDuration)s audio)")
         let startTime = CFAbsoluteTimeGetCurrent()
-        whisper.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
+        recognition.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
             guard let self else { return }
             let elapsed = String(format: "%.1f", CFAbsoluteTimeGetCurrent() - startTime)
             Log.info("Final transcription done (\(elapsed)s): \(text)")
