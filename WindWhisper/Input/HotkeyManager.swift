@@ -1,18 +1,22 @@
 import Cocoa
 import Carbon
 
-/// 全局快捷键管理。默认 Cmd+Opt+R。
+/// 全局快捷键管理，支持动态配置。
 class HotkeyManager {
     static let shared = HotkeyManager()
 
     private var eventTap: CFMachPort?
     private var callback: (() -> Void)?
+    private var targetKeyCode: CGKeyCode
+    private var targetModifiers: CGEventFlags
 
-    // Cmd + Option + R
-    private let targetKeyCode: CGKeyCode = 15 // R
-    private let targetModifiers: CGEventFlags = [.maskCommand, .maskAlternate]
+    private static let relevantModifiersMask: CGEventFlags = [.maskCommand, .maskAlternate, .maskControl, .maskShift]
 
-    private init() {}
+    private init() {
+        let config = HotkeyConfig.load()
+        targetKeyCode = config.keyCode
+        targetModifiers = config.modifiers
+    }
 
     func register(action: @escaping () -> Void) {
         self.callback = action
@@ -41,21 +45,25 @@ class HotkeyManager {
         CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
         CGEvent.tapEnable(tap: eventTap, enable: true)
 
-        print("[HotkeyManager] Registered Cmd+Opt+R")
+        let config = HotkeyConfig.load()
+        print("[HotkeyManager] Registered \(config.displayString)")
+    }
+
+    func updateHotkey(_ config: HotkeyConfig) {
+        targetKeyCode = config.keyCode
+        targetModifiers = config.modifiers
+        print("[HotkeyManager] Updated hotkey to \(config.displayString)")
     }
 
     private func handleEvent(_ event: CGEvent) -> Unmanaged<CGEvent>? {
         let keyCode = CGKeyCode(event.getIntegerValueField(.keyboardEventKeycode))
-        let flags = event.flags
+        let pressedModifiers = event.flags.intersection(Self.relevantModifiersMask)
 
-        if keyCode == targetKeyCode
-            && flags.contains(.maskCommand)
-            && flags.contains(.maskAlternate)
-        {
+        if keyCode == targetKeyCode && pressedModifiers == targetModifiers {
             DispatchQueue.main.async { [weak self] in
                 self?.callback?()
             }
-            return nil // 吞掉这个按键
+            return nil
         }
 
         return Unmanaged.passRetained(event)
