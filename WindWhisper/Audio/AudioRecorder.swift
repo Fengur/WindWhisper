@@ -50,9 +50,9 @@ class AudioRecorder {
         do {
             try engine.start()
             self.engine = engine
-            print("[WindWhisper] Recording started")
+            Log.info("Recording started")
         } catch {
-            print("[WindWhisper] Failed to start recording: \(error)")
+            Log.error("Failed to start recording: \(error)")
         }
     }
 
@@ -74,7 +74,7 @@ class AudioRecorder {
         pcmBuffer = []
         lock.unlock()
 
-        print("[WindWhisper] Recording stopped, \(result.count) samples (\(String(format: "%.1f", Double(result.count) / 16000.0))s)")
+        Log.info("Recording stopped, \(result.count) samples (\(String(format: "%.1f", Double(result.count) / 16000.0))s)")
         return result
     }
 }

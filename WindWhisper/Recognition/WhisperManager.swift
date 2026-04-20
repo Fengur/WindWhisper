@@ -9,12 +9,17 @@ class WhisperManager {
         loadModel()
     }
 
+    private static let modelNames = ["ggml-small", "ggml-medium", "ggml-base"]
+
     private func loadModel() {
-        if let path = Bundle.main.path(forResource: "ggml-base", ofType: "bin") {
-            bridge = WhisperBridge(modelPath: path)
-        } else {
-            print("[WhisperManager] Model file not found in bundle, whisper disabled")
+        for name in Self.modelNames {
+            if let path = Bundle.main.path(forResource: name, ofType: "bin") {
+                bridge = WhisperBridge(modelPath: path)
+                Log.info("Loaded model: \(name)")
+                return
+            }
         }
+        Log.error("No model file found in bundle, whisper disabled")
     }
 
     func transcribe(pcmData: [Float]) -> String {
