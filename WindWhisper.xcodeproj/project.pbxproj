@@ -21,6 +21,7 @@
 		C6580FA0A2D955489046A922 /* WhisperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */; };
 		E5407D5913835B9D30C244CC /* WindWhisperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */; };
 		E7AA9C27A41C52D1DA70372D /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8CDA8D612B444E75007CA /* StatusBarView.swift */; };
+		ED7B7256AA349F3B28AAD4A0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F17991C5A3DA152AFF7D269F /* SnapKit */; };
 		F8FB5D46E82DA1E60EB19409 /* VoiceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FA79D8FFE3F3C2D456B69 /* VoiceEngine.swift */; };
 		FE538976D208DB1F8ED2E408 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91A0090DED398FA5CF100F2 /* AudioRecorder.swift */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,17 @@
 		E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperManager.swift; sourceTree = "<group>"; };
 		EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9182C93882A45EEB9DD315C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED7B7256AA349F3B28AAD4A0 /* SnapKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		274C1893F88A38EE79857146 /* App */ = {
@@ -142,6 +154,7 @@
 			buildPhases = (
 				55109D646746942FE931C5C2 /* Sources */,
 				F30A4005FBFD14163C67AFCE /* Resources */,
+				9182C93882A45EEB9DD315C9 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -149,6 +162,7 @@
 			);
 			name = WindWhisper;
 			packageProductDependencies = (
+				F17991C5A3DA152AFF7D269F /* SnapKit */,
 			);
 			productName = WindWhisper;
 			productReference = 54CBE295F8EA76C5F9DB6EBF /* WindWhisper.app */;
@@ -174,6 +188,9 @@
 			);
 			mainGroup = 6CCC782C01A0C6F7E6D901CD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B4A6A07761F8107AF8177881 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2FB741EC0C66BB05A068EFE4 /* Products */;
 			projectDirPath = "";
@@ -450,6 +467,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B4A6A07761F8107AF8177881 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F17991C5A3DA152AFF7D269F /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B4A6A07761F8107AF8177881 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C9C76657712F9BC993AF260D /* Project object */;
 }

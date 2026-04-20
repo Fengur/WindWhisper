@@ -13,7 +13,7 @@ class SettingsWindowController {
         }
 
         let w = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 340, height: 160),
+            contentRect: NSRect(x: 0, y: 0, width: 340, height: 240),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
@@ -39,6 +39,8 @@ struct SettingsView: View {
         ("auto", "自动检测"),
     ]
 
+    @State private var showWidget: Bool = UserDefaults.standard.object(forKey: "widget.visible") as? Bool ?? true
+
     var body: some View {
         Form {
             HStack {
@@ -62,22 +64,25 @@ struct SettingsView: View {
                     UserDefaults.standard.set(newValue, forKey: "whisper.language")
                 }
             }
+
+            Toggle("显示悬浮按钮", isOn: $showWidget)
+                .onChange(of: showWidget) { newValue in
+                    if newValue {
+                        VoiceEngine.shared.widget.show()
+                    } else {
+                        VoiceEngine.shared.widget.hide()
+                    }
+                }
         }
         .formStyle(.grouped)
         .frame(width: 320)
 
         HStack {
-            Button("重置悬浮按钮位置") {
+            Button("重置位置") {
                 VoiceEngine.shared.widget.resetPosition()
             }
             .buttonStyle(.bordered)
             Spacer()
-            Button("恢复默认") {
-                language = "zh"
-                UserDefaults.standard.set("zh", forKey: "whisper.language")
-                VoiceEngine.shared.widget.resetPosition()
-            }
-            .buttonStyle(.bordered)
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 12)

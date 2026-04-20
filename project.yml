@@ -4,10 +4,17 @@ options:
   deploymentTarget:
     macOS: "13.0"
 
+packages:
+  SnapKit:
+    url: https://github.com/SnapKit/SnapKit
+    from: "5.7.0"
+
 targets:
   WindWhisper:
     type: application
     platform: macOS
+    dependencies:
+      - package: SnapKit
     sources:
       - WindWhisper
     settings:
