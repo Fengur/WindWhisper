@@ -15,6 +15,7 @@ enum WidgetState {
     case idle
     case recording
     case transcribing
+    case result
 }
 
 // MARK: - FloatingWidgetView
@@ -23,6 +24,8 @@ class FloatingWidgetView: NSView {
     var onToggle: (() -> Void)?
     var onHide: (() -> Void)?
     var onDragEnd: (() -> Void)?
+    var onCopy: (() -> Void)?
+    var onClose: (() -> Void)?
 
     private let backgroundEffect = NSVisualEffectView()
     private let iconContainer = NSView()
@@ -31,10 +34,14 @@ class FloatingWidgetView: NSView {
     private let rippleLayer2 = CAShapeLayer()
     private let indicatorDot = NSView()
     private let textLabel = NSTextField(labelWithString: "")
+    private let copyButton = NSButton()
+    private let closeButton = NSButton()
+    private let toastLabel = NSTextField(labelWithString: "")
 
     private(set) var state: WidgetState = .idle
     private let buttonSize: CGFloat = 44
     private let expandedHeight: CGFloat = 56
+    private let idleAlpha: CGFloat = 0.55
 
     private var dragOrigin: NSPoint?
     private var didDrag = false
@@ -42,12 +49,16 @@ class FloatingWidgetView: NSView {
     override init(frame: NSRect) {
         super.init(frame: frame)
         wantsLayer = true
+        alphaValue = idleAlpha
 
         setupBackground()
         setupIcon()
         setupRipples()
         setupIndicator()
         setupTextLabel()
+        setupActionButtons()
+        setupToast()
+        setupTrackingArea()
         applyIdleLayout()
     }
 
@@ -106,6 +117,66 @@ class FloatingWidgetView: NSView {
         addSubview(textLabel)
     }
 
+    private func setupActionButtons() {
+        let iconSize = NSSize(width: 14, height: 14)
+
+        copyButton.bezelStyle = .circular
+        copyButton.isBordered = false
+        copyButton.wantsLayer = true
+        copyButton.layer?.cornerRadius = 12
+        copyButton.layer?.backgroundColor = WindColor.teal.withAlphaComponent(0.2).cgColor
+        if let img = NSImage(systemSymbolName: "doc.on.doc", accessibilityDescription: "复制") {
+            img.size = iconSize
+            copyButton.image = img
+        }
+        copyButton.contentTintColor = WindColor.teal
+        copyButton.target = self
+        copyButton.action = #selector(copyTapped)
+        copyButton.isHidden = true
+        copyButton.alphaValue = 0
+        addSubview(copyButton)
+
+        closeButton.bezelStyle = .circular
+        closeButton.isBordered = false
+        closeButton.wantsLayer = true
+        closeButton.layer?.cornerRadius = 12
+        closeButton.layer?.backgroundColor = NSColor.gray.withAlphaComponent(0.2).cgColor
+        if let img = NSImage(systemSymbolName: "xmark", accessibilityDescription: "关闭") {
+            img.size = iconSize
+            closeButton.image = img
+        }
+        closeButton.contentTintColor = .secondaryLabelColor
+        closeButton.target = self
+        closeButton.action = #selector(closeTapped)
+        closeButton.isHidden = true
+        closeButton.alphaValue = 0
+        addSubview(closeButton)
+    }
+
+    private func setupToast() {
+        toastLabel.font = .systemFont(ofSize: 11)
+        toastLabel.textColor = .white
+        toastLabel.backgroundColor = NSColor.black.withAlphaComponent(0.7)
+        toastLabel.isBezeled = false
+        toastLabel.isEditable = false
+        toastLabel.alignment = .center
+        toastLabel.wantsLayer = true
+        toastLabel.layer?.cornerRadius = 4
+        toastLabel.isHidden = true
+        toastLabel.alphaValue = 0
+        addSubview(toastLabel)
+    }
+
+    private func setupTrackingArea() {
+        let area = NSTrackingArea(
+            rect: .zero,
+            options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
+            owner: self,
+            userInfo: nil
+        )
+        addTrackingArea(area)
+    }
+
     // MARK: - Layout
 
     private func applyIdleLayout() {
@@ -156,6 +227,49 @@ class FloatingWidgetView: NSView {
         backgroundEffect.layer?.backgroundColor = NSColor(white: 0.1, alpha: 0.85).cgColor
     }
 
+    private func applyResultLayout() {
+        let expandedIconSize: CGFloat = 40
+        iconContainer.snp.remakeConstraints { make in
+            make.leading.equalToSuperview().offset(8)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(expandedIconSize)
+        }
+        iconContainer.layer?.cornerRadius = expandedIconSize / 2
+        buttonIcon.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        closeButton.snp.remakeConstraints { make in
+            make.trailing.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview().offset(-11)
+            make.width.height.equalTo(24)
+        }
+        copyButton.snp.remakeConstraints { make in
+            make.trailing.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview().offset(11)
+            make.width.height.equalTo(24)
+        }
+
+        textLabel.snp.remakeConstraints { make in
+            make.leading.equalTo(iconContainer.snp.trailing).offset(10)
+            make.trailing.equalTo(copyButton.snp.leading).offset(-8)
+            make.centerY.equalToSuperview()
+            make.width.lessThanOrEqualTo(300)
+        }
+
+        toastLabel.snp.remakeConstraints { make in
+            make.centerX.equalTo(textLabel)
+            make.bottom.equalTo(textLabel.snp.top).offset(-4)
+            make.width.lessThanOrEqualTo(120)
+        }
+
+        backgroundEffect.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        backgroundEffect.layer?.cornerRadius = expandedHeight / 2
+        backgroundEffect.layer?.backgroundColor = NSColor(white: 0.1, alpha: 0.85).cgColor
+    }
+
     // MARK: - State Transitions
 
     func setState(_ newState: WidgetState, text: String = "") {
@@ -174,6 +288,8 @@ class FloatingWidgetView: NSView {
             stopRipples()
             stopDotPulse()
             indicatorDot.layer?.backgroundColor = WindColor.tealDark.cgColor
+        case .result:
+            transitionToResult()
         }
     }
 
@@ -181,12 +297,32 @@ class FloatingWidgetView: NSView {
         textLabel.stringValue = text
     }
 
-    // MARK: - Recording Transition
+    func showToast(_ message: String) {
+        toastLabel.stringValue = "  \(message)  "
+        toastLabel.isHidden = false
+        NSAnimationContext.runAnimationGroup({ ctx in
+            ctx.duration = 0.2
+            self.toastLabel.animator().alphaValue = 1.0
+        }, completionHandler: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+                NSAnimationContext.runAnimationGroup({ ctx in
+                    ctx.duration = 0.3
+                    self?.toastLabel.animator().alphaValue = 0
+                }, completionHandler: { [weak self] in
+                    self?.toastLabel.isHidden = true
+                })
+            }
+        })
+    }
+
+    // MARK: - Transitions
 
     private func transitionToRecording() {
+        self.animator().alphaValue = 1.0
         applyExpandedLayout()
         textLabel.isHidden = false
         indicatorDot.isHidden = false
+        hideActionButtons()
 
         NSAnimationContext.runAnimationGroup { ctx in
             ctx.duration = 0.4
@@ -202,6 +338,25 @@ class FloatingWidgetView: NSView {
         startDotPulse()
     }
 
+    private func transitionToResult() {
+        stopRipples()
+        stopDotPulse()
+        indicatorDot.isHidden = true
+        indicatorDot.alphaValue = 0
+
+        applyResultLayout()
+        copyButton.isHidden = false
+        closeButton.isHidden = false
+
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.3
+            ctx.allowsImplicitAnimation = true
+            self.copyButton.animator().alphaValue = 1.0
+            self.closeButton.animator().alphaValue = 1.0
+            self.layoutSubtreeIfNeeded()
+        }
+    }
+
     private func transitionToIdle() {
         stopRipples()
         stopDotPulse()
@@ -212,13 +367,24 @@ class FloatingWidgetView: NSView {
             ctx.allowsImplicitAnimation = true
             self.textLabel.animator().alphaValue = 0
             self.indicatorDot.animator().alphaValue = 0
+            self.copyButton.animator().alphaValue = 0
+            self.closeButton.animator().alphaValue = 0
+            self.animator().alphaValue = self.idleAlpha
         }, completionHandler: { [weak self] in
             self?.textLabel.isHidden = true
             self?.indicatorDot.isHidden = true
             self?.textLabel.stringValue = ""
+            self?.hideActionButtons()
             self?.applyIdleLayout()
             self?.layoutSubtreeIfNeeded()
         })
+    }
+
+    private func hideActionButtons() {
+        copyButton.isHidden = true
+        copyButton.alphaValue = 0
+        closeButton.isHidden = true
+        closeButton.alphaValue = 0
     }
 
     // MARK: - Bounce
@@ -247,7 +413,6 @@ class FloatingWidgetView: NSView {
             let pathAnim = CABasicAnimation(keyPath: "path")
             pathAnim.fromValue = startPath
             pathAnim.toValue = endPath
-
             let opacityAnim = CABasicAnimation(keyPath: "opacity")
             opacityAnim.fromValue = 0.6
             opacityAnim.toValue = 0.0
@@ -312,7 +477,9 @@ class FloatingWidgetView: NSView {
 
     override func mouseUp(with event: NSEvent) {
         if !didDrag {
-            onToggle?()
+            if state == .idle || state == .recording {
+                onToggle?()
+            }
         } else {
             onDragEnd?()
         }
@@ -320,15 +487,37 @@ class FloatingWidgetView: NSView {
         didDrag = false
     }
 
+    // MARK: - Hover
+
+    override func mouseEntered(with event: NSEvent) {
+        if state == .idle {
+            NSAnimationContext.runAnimationGroup { ctx in
+                ctx.duration = 0.2
+                self.animator().alphaValue = 1.0
+            }
+        }
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        if state == .idle {
+            NSAnimationContext.runAnimationGroup { ctx in
+                ctx.duration = 0.3
+                self.animator().alphaValue = self.idleAlpha
+            }
+        }
+    }
+
+    // MARK: - Right Click
+
     override func rightMouseDown(with event: NSEvent) {
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "隐藏悬浮按钮", action: #selector(hideWidget), keyEquivalent: ""))
         NSMenu.popUpContextMenu(menu, with: event, for: self)
     }
 
-    @objc private func hideWidget() {
-        onHide?()
-    }
+    @objc private func hideWidget() { onHide?() }
+    @objc private func copyTapped() { onCopy?() }
+    @objc private func closeTapped() { onClose?() }
 }
 
 // MARK: - Controller
@@ -337,6 +526,8 @@ class FloatingWidgetController {
     private var panel: NSPanel?
     private var widgetView: FloatingWidgetView?
     private var onToggle: (() -> Void)?
+    private var lastResultText: String = ""
+    private var homePosition: NSPoint = .zero
 
     private static let posXKey = "widget.posX"
     private static let posYKey = "widget.posY"
@@ -366,28 +557,39 @@ class FloatingWidgetController {
     func startRecording() {
         if !isVisible { show() }
         widgetView?.setState(.recording, text: "正在聆听...")
-        updatePanelSize(expanded: true)
+        expandPanel()
     }
 
     func updateText(_ text: String) {
         widgetView?.updateText(text)
     }
 
-    func showFinal(_ text: String, then completion: @escaping () -> Void) {
-        widgetView?.setState(.transcribing, text: text)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-            completion()
-            self?.collapseAndRestore()
-        }
+    func showResult(_ text: String) {
+        lastResultText = text
+        widgetView?.setState(.result, text: text)
     }
 
     func collapse() {
-        collapseAndRestore()
+        collapseToHome()
     }
 
-    private func collapseAndRestore() {
+    func copyToClipboard() {
+        guard !lastResultText.isEmpty else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(lastResultText, forType: .string)
+        widgetView?.showToast("已复制")
+    }
+
+    private func collapseToHome() {
         widgetView?.setState(.idle)
-        updatePanelSize(expanded: false)
+
+        let newFrame = NSRect(x: homePosition.x, y: homePosition.y, width: 48, height: 48)
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.35
+            ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            self.panel?.animator().setFrame(newFrame, display: true)
+        }
+
         let wasHidden = !(UserDefaults.standard.object(forKey: Self.visibleKey) as? Bool ?? true)
         if wasHidden { hide() }
     }
@@ -395,7 +597,7 @@ class FloatingWidgetController {
     func resetPosition() {
         UserDefaults.standard.removeObject(forKey: Self.posXKey)
         UserDefaults.standard.removeObject(forKey: Self.posYKey)
-        positionPanel()
+        setDefaultPosition()
     }
 
     // MARK: - Panel
@@ -404,7 +606,9 @@ class FloatingWidgetController {
         let widget = FloatingWidgetView(frame: NSRect(x: 0, y: 0, width: 48, height: 48))
         widget.onToggle = { [weak self] in self?.onToggle?() }
         widget.onHide = { [weak self] in self?.hide() }
-        widget.onDragEnd = { [weak self] in self?.savePosition() }
+        widget.onDragEnd = { [weak self] in self?.handleDragEnd() }
+        widget.onCopy = { [weak self] in self?.copyToClipboard() }
+        widget.onClose = { [weak self] in self?.collapseToHome() }
 
         let panel = NSPanel(
             contentRect: NSRect(x: 0, y: 0, width: 48, height: 48),
@@ -424,33 +628,50 @@ class FloatingWidgetController {
 
         self.panel = panel
         self.widgetView = widget
-        positionPanel()
+        loadPosition()
     }
 
-    private func positionPanel() {
+    private func loadPosition() {
         guard let panel else { return }
 
         if let x = UserDefaults.standard.object(forKey: Self.posXKey) as? CGFloat,
            let y = UserDefaults.standard.object(forKey: Self.posYKey) as? CGFloat {
-            let saved = NSPoint(x: x, y: y)
-            let onScreen = NSScreen.screens.contains {
-                $0.frame.insetBy(dx: -50, dy: -50).contains(saved)
-            }
-            if onScreen {
-                panel.setFrameOrigin(saved)
+            let ballRight = NSPoint(x: x + 48, y: y + 24)
+            if NSScreen.screens.contains(where: { $0.frame.contains(ballRight) }) {
+                homePosition = NSPoint(x: x, y: y)
+                panel.setFrameOrigin(homePosition)
                 return
             }
         }
 
+        setDefaultPosition()
+    }
+
+    private func setDefaultPosition() {
+        guard let panel else { return }
         let screen = screenForMouse()
         let visible = screen.visibleFrame
-        panel.setFrameOrigin(NSPoint(x: visible.maxX - 48 - 80, y: visible.midY))
+        homePosition = NSPoint(x: visible.midX + visible.width / 4, y: visible.midY)
+        panel.setFrameOrigin(homePosition)
+    }
+
+    private func handleDragEnd() {
+        guard let panel else { return }
+        if widgetView?.state == .idle {
+            homePosition = panel.frame.origin
+            savePosition()
+        } else {
+            homePosition = NSPoint(
+                x: panel.frame.origin.x + (panel.frame.width - 48) / 2,
+                y: panel.frame.origin.y + (panel.frame.height - 48) / 2
+            )
+            savePosition()
+        }
     }
 
     private func savePosition() {
-        guard let panel else { return }
-        UserDefaults.standard.set(panel.frame.origin.x, forKey: Self.posXKey)
-        UserDefaults.standard.set(panel.frame.origin.y, forKey: Self.posYKey)
+        UserDefaults.standard.set(homePosition.x, forKey: Self.posXKey)
+        UserDefaults.standard.set(homePosition.y, forKey: Self.posYKey)
     }
 
     private func screenForMouse() -> NSScreen {
@@ -464,43 +685,27 @@ class FloatingWidgetController {
         return NSScreen.screens.first { $0.frame.contains(center) } ?? screenForMouse()
     }
 
-    private var collapsedOrigin: NSPoint?
-
-    private func updatePanelSize(expanded: Bool) {
+    private func expandPanel() {
         guard let panel else { return }
         let expandedWidth: CGFloat = 420
         let expandedHeight: CGFloat = 56
-        let collapsedSize: CGFloat = 48
 
-        if expanded {
-            collapsedOrigin = panel.frame.origin
+        let screen = screenForPanel()
+        let visible = screen.visibleFrame
+        let isRight = panel.frame.midX > visible.midX
 
-            let screen = screenForPanel()
-            let visible = screen.visibleFrame
-            let isRight = panel.frame.midX > visible.midX
+        var newX = homePosition.x
+        let newY = homePosition.y - (expandedHeight - 48) / 2
 
-            var newX = panel.frame.origin.x
-            let newY = panel.frame.origin.y - (expandedHeight - panel.frame.height) / 2
+        if isRight {
+            newX = homePosition.x + 48 - expandedWidth
+        }
 
-            if isRight {
-                newX = panel.frame.maxX - expandedWidth
-            }
-
-            let newFrame = NSRect(x: newX, y: newY, width: expandedWidth, height: expandedHeight)
-            NSAnimationContext.runAnimationGroup { ctx in
-                ctx.duration = 0.4
-                ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-                panel.animator().setFrame(newFrame, display: true)
-            }
-        } else {
-            let origin = collapsedOrigin ?? panel.frame.origin
-            let newFrame = NSRect(x: origin.x, y: origin.y, width: collapsedSize, height: collapsedSize)
-            NSAnimationContext.runAnimationGroup { ctx in
-                ctx.duration = 0.35
-                ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-                panel.animator().setFrame(newFrame, display: true)
-            }
-            collapsedOrigin = nil
+        let newFrame = NSRect(x: newX, y: newY, width: expandedWidth, height: expandedHeight)
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.4
+            ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            panel.animator().setFrame(newFrame, display: true)
         }
     }
 }

@@ -40,13 +40,14 @@ struct SettingsView: View {
     ]
 
     @State private var showWidget: Bool = UserDefaults.standard.object(forKey: "widget.visible") as? Bool ?? true
+    @State private var autoPaste: Bool = UserDefaults.standard.object(forKey: "autoPaste") as? Bool ?? true
 
     var body: some View {
         Form {
             HStack {
                 Text("触发方式")
                 Spacer()
-                Text("双击 Fn 键 / 点击悬浮按钮")
+                Text("双击 Control 键 / 点击悬浮按钮")
                     .foregroundColor(.secondary)
             }
 
@@ -64,6 +65,11 @@ struct SettingsView: View {
                     UserDefaults.standard.set(newValue, forKey: "whisper.language")
                 }
             }
+
+            Toggle("自动粘贴到输入框", isOn: $autoPaste)
+                .onChange(of: autoPaste) { newValue in
+                    UserDefaults.standard.set(newValue, forKey: "autoPaste")
+                }
 
             Toggle("显示悬浮按钮", isOn: $showWidget)
                 .onChange(of: showWidget) { newValue in

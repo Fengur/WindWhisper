@@ -42,7 +42,7 @@ struct StatusBarView: View {
             .disabled(engine.state == .transcribing)
 
             // 快捷键提示
-            Text("双击 Fn 键")
+            Text("双击 Control")
                 .font(.caption)
                 .foregroundColor(.secondary)
 
