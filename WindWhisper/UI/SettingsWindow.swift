@@ -6,30 +6,31 @@ class SettingsWindowController {
     private var window: NSWindow?
 
     func show() {
-        if let window, window.isVisible {
-            window.makeKeyAndOrderFront(nil)
+        if let w = window, w.isVisible {
+            w.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
             return
         }
 
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 320, height: 160),
+        let w = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 340, height: 160),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
         )
-        window.title = "WindWhisper 设置"
-        window.level = .floating
-        window.center()
-        window.contentView = NSHostingView(rootView: SettingsView())
-        window.makeKeyAndOrderFront(nil)
-        self.window = window
+        w.isReleasedWhenClosed = false
+        w.title = "WindWhisper 设置"
+        w.level = .floating
+        w.center()
+        w.contentView = NSHostingView(rootView: SettingsView())
+        w.makeKeyAndOrderFront(nil)
+        self.window = w
 
         NSApp.activate(ignoringOtherApps: true)
     }
 }
 
 struct SettingsView: View {
-    @State private var config = HotkeyConfig.load()
     @State private var language: String = UserDefaults.standard.string(forKey: "whisper.language") ?? "zh"
 
     private let languageOptions: [(id: String, label: String)] = [
@@ -39,17 +40,17 @@ struct SettingsView: View {
     ]
 
     var body: some View {
-        VStack(spacing: 16) {
+        Form {
             HStack {
-                Text("快捷键")
-                    .frame(width: 60, alignment: .trailing)
-                HotkeyRecorderView(config: $config)
+                Text("触发方式")
                 Spacer()
+                Text("双击 Fn 键 / 点击悬浮按钮")
+                    .foregroundColor(.secondary)
             }
 
             HStack {
-                Text("语言")
-                    .frame(width: 60, alignment: .trailing)
+                Text("识别语言")
+                Spacer()
                 Picker("", selection: $language) {
                     ForEach(languageOptions, id: \.id) { option in
                         Text(option.label).tag(option.id)
@@ -60,72 +61,25 @@ struct SettingsView: View {
                 .onChange(of: language) { newValue in
                     UserDefaults.standard.set(newValue, forKey: "whisper.language")
                 }
-                Spacer()
-            }
-
-            HStack {
-                Spacer()
-                Button("恢复默认") {
-                    config = .default
-                    config.save()
-                    HotkeyManager.shared.updateHotkey(config)
-                    language = "zh"
-                    UserDefaults.standard.set("zh", forKey: "whisper.language")
-                }
-                .buttonStyle(.bordered)
             }
         }
-        .padding(20)
-        .frame(width: 300)
-    }
-}
+        .formStyle(.grouped)
+        .frame(width: 320)
 
-struct HotkeyRecorderView: View {
-    @Binding var config: HotkeyConfig
-    @State private var isListening = false
-    @State private var monitor: Any?
-
-    var body: some View {
-        Button(action: { startListening() }) {
-            Text(isListening ? "请按下快捷键..." : config.displayString)
-                .frame(minWidth: 140)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-        }
-        .buttonStyle(.bordered)
-        .onDisappear { stopListening() }
-    }
-
-    private func startListening() {
-        isListening = true
-        monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            if event.keyCode == 53 {
-                stopListening()
-                return nil
+        HStack {
+            Button("重置悬浮按钮位置") {
+                VoiceEngine.shared.widget.resetPosition()
             }
-
-            let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-            let hasModifier = !flags.intersection([.command, .option, .control, .shift]).isEmpty
-
-            if hasModifier {
-                config = HotkeyConfig(
-                    keyCode: CGKeyCode(event.keyCode),
-                    modifiers: HotkeyConfig.fromNSEventFlags(event.modifierFlags)
-                )
-                config.save()
-                HotkeyManager.shared.updateHotkey(config)
-                stopListening()
-                return nil
+            .buttonStyle(.bordered)
+            Spacer()
+            Button("恢复默认") {
+                language = "zh"
+                UserDefaults.standard.set("zh", forKey: "whisper.language")
+                VoiceEngine.shared.widget.resetPosition()
             }
-            return event
+            .buttonStyle(.bordered)
         }
-    }
-
-    private func stopListening() {
-        if let monitor {
-            NSEvent.removeMonitor(monitor)
-        }
-        monitor = nil
-        isListening = false
+        .padding(.horizontal, 20)
+        .padding(.bottom, 12)
     }
 }

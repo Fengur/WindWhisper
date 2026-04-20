@@ -28,7 +28,7 @@ class TextInjector {
             }
         }
 
-        print("[WindWhisper] Injected: \(text)")
+        Log.info("Injected: \(text)")
     }
 
     private func simulatePaste() {

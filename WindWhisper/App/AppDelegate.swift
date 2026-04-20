@@ -11,7 +11,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setupStatusItem()
         setupPopover()
-        HotkeyManager.shared.register { [weak self] in
+
+        voiceEngine.widget.setup { [weak self] in
+            self?.voiceEngine.toggle()
+        }
+
+        DoubleTapTrigger.shared.register { [weak self] in
             self?.voiceEngine.toggle()
         }
     }
@@ -25,7 +30,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.action = #selector(onLeftClick)
         }
 
-        // 右键菜单通过 event monitor
         NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [weak self] event in
             if let button = self?.statusItem.button, button.hitTest(event.locationInWindow) != nil {
                 self?.onRightClick()
@@ -51,7 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func onLeftClick() {
-        print("[WindWhisper] Left click → toggle")
+        Log.info("Left click → toggle")
         voiceEngine.toggle()
     }
 
@@ -84,26 +88,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let toggleTitle = voiceEngine.state == .recording ? "停止录音" : "开始录音"
         menu.addItem(NSMenuItem(title: toggleTitle, action: #selector(toggleRecording), keyEquivalent: "r"))
 
+        let fnHint = NSMenuItem(title: "双击 Fn 开始/停止", action: nil, keyEquivalent: "")
+        fnHint.isEnabled = false
+        menu.addItem(fnHint)
+
         menu.addItem(NSMenuItem.separator())
 
-        let config = HotkeyConfig.load()
-        let hotkeyItem = NSMenuItem(title: "快捷键: \(config.displayString)...", action: #selector(openHotkeySettings), keyEquivalent: "")
-        hotkeyItem.target = self
-        menu.addItem(hotkeyItem)
+        let settingsItem = NSMenuItem(title: "设置...", action: #selector(openSettings), keyEquivalent: ",")
+        settingsItem.target = self
+        menu.addItem(settingsItem)
 
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "退出 WindWhisper", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
         statusItem.menu = menu
         button.performClick(nil)
-        statusItem.menu = nil // 用完清掉，下次左键点击才不会弹菜单
+        statusItem.menu = nil
     }
 
     @objc private func toggleRecording() {
         voiceEngine.toggle()
     }
 
-    @objc private func openHotkeySettings() {
+    @objc private func openSettings() {
         SettingsWindowController.shared.show()
     }
 

@@ -6,7 +6,7 @@ class WhisperBridge {
 
     init?(modelPath: String) {
         guard FileManager.default.fileExists(atPath: modelPath) else {
-            print("[WhisperBridge] Model not found: \(modelPath)")
+            Log.error("Model not found: \(modelPath)")
             return nil
         }
 
@@ -14,10 +14,10 @@ class WhisperBridge {
         ctx = whisper_init_from_file_with_params(modelPath, cparams)
 
         guard ctx != nil else {
-            print("[WhisperBridge] Failed to load model")
+            Log.error("Failed to load model")
             return nil
         }
-        print("[WhisperBridge] Model loaded: \(modelPath)")
+        Log.info("Model loaded: \(modelPath)")
     }
 
     deinit {
@@ -49,7 +49,7 @@ class WhisperBridge {
         free(langCStr)
 
         guard result == 0 else {
-            print("[WhisperBridge] Transcription failed: \(result)")
+            Log.error("Transcription failed: \(result)")
             return ""
         }
 
@@ -61,6 +61,6 @@ class WhisperBridge {
             }
         }
 
-        return text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return TextPostProcessor.process(text)
     }
 }

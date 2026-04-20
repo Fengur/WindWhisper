@@ -18,7 +18,7 @@ class VoiceEngine: ObservableObject {
     private let recorder = AudioRecorder()
     private let whisper = WhisperManager()
     private let injector = TextInjector()
-    private let panelController = FloatingPanelController()
+    let widget = FloatingWidgetController()
     private var micvolGuard: OpaquePointer?
     private var interimTimer: Timer?
     private var isInterimInFlight = false
@@ -43,11 +43,11 @@ class VoiceEngine: ObservableObject {
             let device = try MicvolBridge.defaultInputDevice()
             micvolGuard = try MicvolBridge.guardMaximize(deviceId: device.id)
         } catch {
-            print("[WindWhisper] micvol error: \(error), continuing without volume boost")
+            Log.error("micvol: \(error), continuing without volume boost")
         }
 
         recorder.start()
-        panelController.show()
+        widget.startRecording()
         startInterimLoop()
     }
 
@@ -61,14 +61,20 @@ class VoiceEngine: ObservableObject {
         guard !isInterimInFlight else { return }
 
         let pcmSnapshot = recorder.snapshot()
-        guard pcmSnapshot.count > 8000 else { return }
+        guard pcmSnapshot.count > 24000 else { return }
+
+        let audioDuration = String(format: "%.1f", Double(pcmSnapshot.count) / 16000.0)
+        Log.info("Interim transcription start (\(audioDuration)s audio)")
 
         isInterimInFlight = true
+        let startTime = CFAbsoluteTimeGetCurrent()
         whisper.transcribeAsync(pcmData: pcmSnapshot) { [weak self] text in
             guard let self else { return }
+            let elapsed = String(format: "%.1f", CFAbsoluteTimeGetCurrent() - startTime)
+            Log.info("Interim transcription done (\(elapsed)s): \(text.prefix(50))")
             self.isInterimInFlight = false
             if self.state == .recording && !text.isEmpty {
-                self.panelController.updateText(text)
+                self.widget.updateText(text)
             }
         }
     }
@@ -85,17 +91,20 @@ class VoiceEngine: ObservableObject {
         }
 
         setState(.transcribing)
-        panelController.updateText("识别中...")
+        widget.updateText("识别中...")
 
+        let audioDuration = String(format: "%.1f", Double(pcmBuffer.count) / 16000.0)
+        Log.info("Final transcription start (\(audioDuration)s audio)")
+        let startTime = CFAbsoluteTimeGetCurrent()
         whisper.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
             guard let self else { return }
+            let elapsed = String(format: "%.1f", CFAbsoluteTimeGetCurrent() - startTime)
+            Log.info("Final transcription done (\(elapsed)s): \(text)")
             if !text.isEmpty {
                 self.lastText = text
-                self.panelController.showFinal(text) {
+                self.widget.showFinal(text) {
                     self.injector.inject(text: text)
                 }
-            } else {
-                self.panelController.hide()
             }
             self.setState(.idle)
         }
