@@ -5,3 +5,8 @@ xcuserdata/
 build/
 vendor/
 *.bin
+vendor/sherpa-onnx/
+Libraries/libonnxruntime.a
+Libraries/sherpa-onnx.xcframework/
+WindWhisper/Resources/sensevoice/
+WindWhisper/Resources/ggml-*.bin
