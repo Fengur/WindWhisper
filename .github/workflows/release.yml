@@ -1,0 +1,54 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Build sherpa-onnx
+        run: |
+          git clone --depth 1 https://github.com/k2-fsa/sherpa-onnx vendor/sherpa-onnx
+          cd vendor/sherpa-onnx && bash build-swift-macos.sh
+          cd ../..
+          cp -r vendor/sherpa-onnx/build-swift-macos/sherpa-onnx.xcframework Libraries/
+          cp vendor/sherpa-onnx/build-swift-macos/install/lib/libonnxruntime.a Libraries/
+
+      - name: Download SenseVoice model
+        run: |
+          mkdir -p WindWhisper/Resources/sensevoice
+          curl -L -o WindWhisper/Resources/sensevoice/model.int8.onnx \
+            https://huggingface.co/csukuangfj/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/resolve/main/model.int8.onnx
+          curl -L -o WindWhisper/Resources/sensevoice/tokens.txt \
+            https://huggingface.co/csukuangfj/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/resolve/main/tokens.txt
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build Release
+        run: |
+          xcodebuild -project WindWhisper.xcodeproj \
+            -scheme WindWhisper \
+            -configuration Release \
+            -derivedDataPath build \
+            build
+
+      - name: Package app
+        run: |
+          cd build/Build/Products/Release
+          zip -r -y WindWhisper-${{ github.ref_name }}.zip WindWhisper.app
+          mv WindWhisper-${{ github.ref_name }}.zip $GITHUB_WORKSPACE/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: WindWhisper-${{ github.ref_name }}.zip
+          generate_release_notes: true
