@@ -276,8 +276,17 @@ class FloatingWidgetView: NSView {
         }
     }
 
-    func updateText(_ text: String) {
+    func updateText(_ text: String, urgent: Bool = false) {
         textLabel.stringValue = text
+        textLabel.textColor = urgent ? .systemRed : .labelColor
+
+        if state == .recording {
+            let tick = CAKeyframeAnimation(keyPath: "transform.scale")
+            tick.values = [1.0, 1.08, 1.0]
+            tick.keyTimes = [0, 0.3, 1.0]
+            tick.duration = 0.3
+            textLabel.layer?.add(tick, forKey: "tick")
+        }
     }
 
     func showToast(_ message: String) {
@@ -528,8 +537,8 @@ class FloatingWidgetController {
         expandPanel()
     }
 
-    func updateText(_ text: String) {
-        widgetView?.updateText(text)
+    func updateText(_ text: String, urgent: Bool = false) {
+        widgetView?.updateText(text, urgent: urgent)
     }
 
     func showResult(_ text: String) {
