@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04255DC069D471F4489E2143 /* sensevoice in Resources */ = {isa = PBXBuildFile; fileRef = 7F4ED6AE1DADC6EF8A2E7816 /* sensevoice */; };
 		0CF80188C17FC52DA777DCF1 /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */; };
 		11D1DD62D99237D954219C4C /* WhisperBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */; };
 		12DA2BF01B38B4FD4C4C5928 /* ggml-base.bin in Resources */ = {isa = PBXBuildFile; fileRef = DBF3589E573657145AC4CBA4 /* ggml-base.bin */; };
@@ -19,8 +20,9 @@
 		4E621523290FCEDE84EDEAD0 /* icon_statusbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D323BCB593F013A72CEF772 /* icon_statusbar.png */; };
 		4F01BCC24681F8D7025EA6FE /* ggml-small.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7EC3F7F46014800CCBDAE30E /* ggml-small.bin */; };
 		5222E4F90AE7D512375E8DDC /* RecognitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E791EE2C613C4714C7968 /* RecognitionManager.swift */; };
+		57ACA2CA2704B433BB47C770 /* StreamingRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71D45D953A0593C21A0B37A /* StreamingRecognizer.swift */; };
 		6661EBB73566F2885B413F34 /* icon_widget.png in Resources */ = {isa = PBXBuildFile; fileRef = C59BFE2C4C7A8A1B31D08372 /* icon_widget.png */; };
-		7EF890BB18912006D694BE34 /* tokens.txt in Resources */ = {isa = PBXBuildFile; fileRef = 072A965BBCB8FEAF4EDB5E9F /* tokens.txt */; };
+		6DD3C403B0AD0F5B01490939 /* paraformer-streaming in Resources */ = {isa = PBXBuildFile; fileRef = ACC26984580880F931FC7CB8 /* paraformer-streaming */; };
 		8D8CFE01DE7D43B9224925FA /* icon_statusbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */; };
 		BAC6713B8A56CC80F59400B7 /* sherpa-onnx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C71A78F40733DF1E4CE6B5FC /* sherpa-onnx.xcframework */; };
 		BB7D9CC8A92E98441450F676 /* SenseVoiceBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B1C39F34905FEB7F18459E6 /* SenseVoiceBridge.swift */; };
@@ -29,7 +31,6 @@
 		C1F862C564161BC658A20EE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C1373133D92047B44E25ED /* AppDelegate.swift */; };
 		C6580FA0A2D955489046A922 /* WhisperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */; };
 		C675ED6733E8BCE019F95A6A /* icon_widget@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E15B8B527A7C774DB93F724B /* icon_widget@2x.png */; };
-		D94CDF8572FA75C69E24C57E /* model.int8.onnx in Resources */ = {isa = PBXBuildFile; fileRef = DA9F8B853707D42ECF484B8D /* model.int8.onnx */; };
 		E5407D5913835B9D30C244CC /* WindWhisperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */; };
 		E7AA9C27A41C52D1DA70372D /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8CDA8D612B444E75007CA /* StatusBarView.swift */; };
 		ED7B7256AA349F3B28AAD4A0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F17991C5A3DA152AFF7D269F /* SnapKit */; };
@@ -38,7 +39,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		072A965BBCB8FEAF4EDB5E9F /* tokens.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = tokens.txt; sourceTree = "<group>"; };
 		0CAC9BEFF1A705821E5B89AF /* DoubleTapTrigger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTapTrigger.swift; sourceTree = "<group>"; };
 		11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindWhisperApp.swift; sourceTree = "<group>"; };
 		3872BF4BBF6F890B758C5231 /* SherpaOnnx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnx.swift; sourceTree = "<group>"; };
@@ -50,17 +50,19 @@
 		5AC8CDA8D612B444E75007CA /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
 		78DAC32ACF7B7A1D7C7D3EA9 /* FloatingWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingWidget.swift; sourceTree = "<group>"; };
 		7EC3F7F46014800CCBDAE30E /* ggml-small.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-small.bin"; sourceTree = "<group>"; };
+		7F4ED6AE1DADC6EF8A2E7816 /* sensevoice */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sensevoice; path = WindWhisper/Resources/sensevoice; sourceTree = SOURCE_ROOT; };
 		8D323BCB593F013A72CEF772 /* icon_statusbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_statusbar.png; sourceTree = "<group>"; };
 		92C1373133D92047B44E25ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		940FA79D8FFE3F3C2D456B69 /* VoiceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceEngine.swift; sourceTree = "<group>"; };
 		97A7CBFF5343FF0F31C1FD07 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		9B1C39F34905FEB7F18459E6 /* SenseVoiceBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenseVoiceBridge.swift; sourceTree = "<group>"; };
 		A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperBridge.swift; sourceTree = "<group>"; };
+		ACC26984580880F931FC7CB8 /* paraformer-streaming */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "paraformer-streaming"; path = "WindWhisper/Resources/paraformer-streaming"; sourceTree = SOURCE_ROOT; };
 		B91A0090DED398FA5CF100F2 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		C59BFE2C4C7A8A1B31D08372 /* icon_widget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_widget.png; sourceTree = "<group>"; };
 		C71A78F40733DF1E4CE6B5FC /* sherpa-onnx.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = "sherpa-onnx.xcframework"; path = "Libraries/sherpa-onnx.xcframework"; sourceTree = "<group>"; };
 		C7658080BC3C17AECB204DDA /* MicvolBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicvolBridge.swift; sourceTree = "<group>"; };
-		DA9F8B853707D42ECF484B8D /* model.int8.onnx */ = {isa = PBXFileReference; path = model.int8.onnx; sourceTree = "<group>"; };
+		D71D45D953A0593C21A0B37A /* StreamingRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingRecognizer.swift; sourceTree = "<group>"; };
 		DBF3589E573657145AC4CBA4 /* ggml-base.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-base.bin"; sourceTree = "<group>"; };
 		E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_statusbar@2x.png"; sourceTree = "<group>"; };
 		E15B8B527A7C774DB93F724B /* icon_widget@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_widget@2x.png"; sourceTree = "<group>"; };
@@ -120,6 +122,8 @@
 		6CCC782C01A0C6F7E6D901CD = {
 			isa = PBXGroup;
 			children = (
+				ACC26984580880F931FC7CB8 /* paraformer-streaming */,
+				7F4ED6AE1DADC6EF8A2E7816 /* sensevoice */,
 				A2652451CF48E902834A7ADC /* WindWhisper */,
 				55AA42FE9FC232030E5AAFAE /* Frameworks */,
 				2FB741EC0C66BB05A068EFE4 /* Products */,
@@ -142,6 +146,7 @@
 				535E791EE2C613C4714C7968 /* RecognitionManager.swift */,
 				9B1C39F34905FEB7F18459E6 /* SenseVoiceBridge.swift */,
 				3872BF4BBF6F890B758C5231 /* SherpaOnnx.swift */,
+				D71D45D953A0593C21A0B37A /* StreamingRecognizer.swift */,
 				463E255E992C32B660176F89 /* TextPostProcessor.swift */,
 				A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */,
 				E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */,
@@ -162,15 +167,6 @@
 			path = WindWhisper;
 			sourceTree = "<group>";
 		};
-		B30ADF1495E0AEC2141E3173 /* sensevoice */ = {
-			isa = PBXGroup;
-			children = (
-				DA9F8B853707D42ECF484B8D /* model.int8.onnx */,
-				072A965BBCB8FEAF4EDB5E9F /* tokens.txt */,
-			);
-			path = sensevoice;
-			sourceTree = "<group>";
-		};
 		D3B1B51D549203CE8E3533E5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -181,7 +177,6 @@
 				E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */,
 				C59BFE2C4C7A8A1B31D08372 /* icon_widget.png */,
 				E15B8B527A7C774DB93F724B /* icon_widget@2x.png */,
-				B30ADF1495E0AEC2141E3173 /* sensevoice */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -263,8 +258,8 @@
 				8D8CFE01DE7D43B9224925FA /* icon_statusbar@2x.png in Resources */,
 				6661EBB73566F2885B413F34 /* icon_widget.png in Resources */,
 				C675ED6733E8BCE019F95A6A /* icon_widget@2x.png in Resources */,
-				D94CDF8572FA75C69E24C57E /* model.int8.onnx in Resources */,
-				7EF890BB18912006D694BE34 /* tokens.txt in Resources */,
+				6DD3C403B0AD0F5B01490939 /* paraformer-streaming in Resources */,
+				04255DC069D471F4489E2143 /* sensevoice in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +281,7 @@
 				0CF80188C17FC52DA777DCF1 /* SettingsWindow.swift in Sources */,
 				BF51F3754C7C4EEC926898B9 /* SherpaOnnx.swift in Sources */,
 				E7AA9C27A41C52D1DA70372D /* StatusBarView.swift in Sources */,
+				57ACA2CA2704B433BB47C770 /* StreamingRecognizer.swift in Sources */,
 				4730F3E47ECA0C1228305A75 /* TextInjector.swift in Sources */,
 				2D58820936377A602448C6A9 /* TextPostProcessor.swift in Sources */,
 				F8FB5D46E82DA1E60EB19409 /* VoiceEngine.swift in Sources */,
