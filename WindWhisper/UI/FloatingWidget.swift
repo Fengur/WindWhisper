@@ -154,14 +154,14 @@ class FloatingWidgetView: NSView {
     }
 
     private func setupToast() {
-        toastLabel.font = .systemFont(ofSize: 11)
+        toastLabel.font = .boldSystemFont(ofSize: 13)
         toastLabel.textColor = .white
-        toastLabel.backgroundColor = NSColor.black.withAlphaComponent(0.7)
         toastLabel.isBezeled = false
         toastLabel.isEditable = false
         toastLabel.alignment = .center
         toastLabel.wantsLayer = true
-        toastLabel.layer?.cornerRadius = 4
+        toastLabel.layer?.cornerRadius = 8
+        toastLabel.layer?.backgroundColor = WindColor.teal.cgColor
         toastLabel.isHidden = true
         toastLabel.alphaValue = 0
         addSubview(toastLabel)
@@ -258,9 +258,8 @@ class FloatingWidgetView: NSView {
         }
 
         toastLabel.snp.remakeConstraints { make in
-            make.centerX.equalTo(textLabel)
-            make.bottom.equalTo(textLabel.snp.top).offset(-4)
-            make.width.lessThanOrEqualTo(120)
+            make.center.equalTo(textLabel)
+            make.height.equalTo(28)
         }
 
         backgroundEffect.snp.remakeConstraints { make in
@@ -300,6 +299,7 @@ class FloatingWidgetView: NSView {
     func showToast(_ message: String) {
         toastLabel.stringValue = "  \(message)  "
         toastLabel.isHidden = false
+        toastLabel.superview?.addSubview(toastLabel)
         NSAnimationContext.runAnimationGroup({ ctx in
             ctx.duration = 0.2
             self.toastLabel.animator().alphaValue = 1.0

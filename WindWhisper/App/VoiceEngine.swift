@@ -59,9 +59,7 @@ class VoiceEngine: ObservableObject {
             guard let self, self.state == .recording else { return }
             self.streamingText = text
             self.widget.updateText(text)
-            if isEndpoint {
-                Log.info("Streaming endpoint: \(text.prefix(50))")
-            }
+            Log.info("Streaming: \(text.prefix(60))\(isEndpoint ? " [endpoint]" : "")")
         }
 
         recorder.onSamples = { [weak self] samples in
@@ -75,6 +73,7 @@ class VoiceEngine: ObservableObject {
     private func stopRecording() {
         let pcmBuffer = recorder.stop()
         recorder.onSamples = nil
+        streamingRecognizer?.reset()
 
         if let guard_ = micvolGuard {
             try? MicvolBridge.guardRestore(guard_)
@@ -84,26 +83,11 @@ class VoiceEngine: ObservableObject {
         setState(.transcribing)
         widget.updateText("识别中...")
 
-        if let streaming = streamingRecognizer {
-            streaming.finish { [weak self] text in
-                guard let self else { return }
-                Log.info("Streaming final result: \(text)")
-                if !text.isEmpty {
-                    self.finishWithText(text)
-                } else {
-                    self.fallbackOffline(pcmBuffer: pcmBuffer)
-                }
-            }
-        } else {
-            fallbackOffline(pcmBuffer: pcmBuffer)
-        }
-    }
-
-    private func fallbackOffline(pcmBuffer: [Float]) {
-        Log.info("Falling back to offline recognition")
+        let startTime = CFAbsoluteTimeGetCurrent()
         recognition.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
             guard let self else { return }
-            Log.info("Offline result: \(text)")
+            let elapsed = String(format: "%.1f", CFAbsoluteTimeGetCurrent() - startTime)
+            Log.info("Final recognition done (\(elapsed)s): \(text)")
             if !text.isEmpty {
                 self.finishWithText(text)
             } else {
