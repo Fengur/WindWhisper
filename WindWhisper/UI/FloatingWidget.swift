@@ -154,17 +154,6 @@ class FloatingWidgetView: NSView {
     }
 
     private func setupToast() {
-        toastLabel.font = .boldSystemFont(ofSize: 13)
-        toastLabel.textColor = .white
-        toastLabel.isBezeled = false
-        toastLabel.isEditable = false
-        toastLabel.alignment = .center
-        toastLabel.wantsLayer = true
-        toastLabel.layer?.cornerRadius = 8
-        toastLabel.layer?.backgroundColor = WindColor.teal.cgColor
-        toastLabel.isHidden = true
-        toastLabel.alphaValue = 0
-        addSubview(toastLabel)
     }
 
     private func setupTrackingArea() {
@@ -239,27 +228,22 @@ class FloatingWidgetView: NSView {
             make.edges.equalToSuperview()
         }
 
-        closeButton.snp.remakeConstraints { make in
-            make.trailing.equalToSuperview().offset(-10)
-            make.centerY.equalToSuperview().offset(-11)
-            make.width.height.equalTo(24)
-        }
         copyButton.snp.remakeConstraints { make in
-            make.trailing.equalToSuperview().offset(-10)
-            make.centerY.equalToSuperview().offset(11)
-            make.width.height.equalTo(24)
+            make.trailing.equalToSuperview().offset(-12)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(28)
+        }
+        closeButton.snp.remakeConstraints { make in
+            make.trailing.equalTo(copyButton.snp.leading).offset(-8)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(28)
         }
 
         textLabel.snp.remakeConstraints { make in
             make.leading.equalTo(iconContainer.snp.trailing).offset(10)
-            make.trailing.equalTo(copyButton.snp.leading).offset(-8)
+            make.trailing.equalTo(closeButton.snp.leading).offset(-10)
             make.centerY.equalToSuperview()
             make.width.lessThanOrEqualTo(300)
-        }
-
-        toastLabel.snp.remakeConstraints { make in
-            make.center.equalTo(textLabel)
-            make.height.equalTo(28)
         }
 
         backgroundEffect.snp.remakeConstraints { make in
@@ -297,22 +281,6 @@ class FloatingWidgetView: NSView {
     }
 
     func showToast(_ message: String) {
-        toastLabel.stringValue = "  \(message)  "
-        toastLabel.isHidden = false
-        toastLabel.superview?.addSubview(toastLabel)
-        NSAnimationContext.runAnimationGroup({ ctx in
-            ctx.duration = 0.2
-            self.toastLabel.animator().alphaValue = 1.0
-        }, completionHandler: {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-                NSAnimationContext.runAnimationGroup({ ctx in
-                    ctx.duration = 0.3
-                    self?.toastLabel.animator().alphaValue = 0
-                }, completionHandler: { [weak self] in
-                    self?.toastLabel.isHidden = true
-                })
-            }
-        })
     }
 
     // MARK: - Transitions
@@ -577,11 +545,84 @@ class FloatingWidgetController {
         guard !lastResultText.isEmpty else { return }
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(lastResultText, forType: .string)
-        widgetView?.showToast("已复制")
+        showToast("已复制")
+    }
+
+    // MARK: - Toast
+
+    private var toastPanel: NSPanel?
+
+    private func showToast(_ message: String) {
+        guard let panel else { return }
+
+        let font = NSFont.boldSystemFont(ofSize: 13)
+        let textSize = (message as NSString).size(withAttributes: [.font: font])
+        let padding: CGFloat = 24
+        let toastWidth = textSize.width + padding * 2
+        let toastHeight: CGFloat = 32
+
+        let toast = NSPanel(
+            contentRect: NSRect(x: 0, y: 0, width: toastWidth, height: toastHeight),
+            styleMask: [.borderless, .nonactivatingPanel],
+            backing: .buffered,
+            defer: false
+        )
+        toast.level = .floating + 1
+        toast.isOpaque = false
+        toast.backgroundColor = .clear
+        toast.hasShadow = false
+        toast.isReleasedWhenClosed = false
+
+        let container = NSView(frame: NSRect(x: 0, y: 0, width: toastWidth, height: toastHeight))
+        container.wantsLayer = true
+        container.layer?.cornerRadius = toastHeight / 2
+        container.layer?.backgroundColor = WindColor.teal.cgColor
+
+        let label = NSTextField(labelWithString: message)
+        label.font = font
+        label.textColor = .white
+        label.alignment = .center
+        label.isBezeled = false
+        label.isEditable = false
+        label.drawsBackground = false
+        label.sizeToFit()
+        label.frame = NSRect(
+            x: (toastWidth - label.frame.width) / 2,
+            y: (toastHeight - label.frame.height) / 2,
+            width: label.frame.width,
+            height: label.frame.height
+        )
+        container.addSubview(label)
+        toast.contentView = container
+
+        let x = panel.frame.midX - toastWidth / 2
+        let y = panel.frame.maxY + 8
+        toast.setFrameOrigin(NSPoint(x: x, y: y))
+        toast.alphaValue = 0
+        toast.orderFrontRegardless()
+
+        toastPanel?.orderOut(nil)
+        toastPanel = toast
+
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.2
+            toast.animator().alphaValue = 1.0
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            NSAnimationContext.runAnimationGroup({ ctx in
+                ctx.duration = 0.3
+                toast.animator().alphaValue = 0
+            }, completionHandler: {
+                toast.orderOut(nil)
+                if self?.toastPanel === toast { self?.toastPanel = nil }
+            })
+        }
     }
 
     private func collapseToHome() {
         widgetView?.setState(.idle)
+        Log.info("collapseToHome: homePosition=\(homePosition)")
 
         let newFrame = NSRect(x: homePosition.x, y: homePosition.y, width: 48, height: 48)
         NSAnimationContext.runAnimationGroup { ctx in
@@ -657,14 +698,8 @@ class FloatingWidgetController {
 
     private func handleDragEnd() {
         guard let panel else { return }
-        if widgetView?.state == .idle {
+        if widgetView?.state == .idle && panel.frame.width <= 48 {
             homePosition = panel.frame.origin
-            savePosition()
-        } else {
-            homePosition = NSPoint(
-                x: panel.frame.origin.x + (panel.frame.width - 48) / 2,
-                y: panel.frame.origin.y + (panel.frame.height - 48) / 2
-            )
             savePosition()
         }
     }
@@ -687,7 +722,7 @@ class FloatingWidgetController {
 
     private func expandPanel() {
         guard let panel else { return }
-        let expandedWidth: CGFloat = 420
+        let expandedWidth: CGFloat = 460
         let expandedHeight: CGFloat = 56
 
         let screen = screenForPanel()
