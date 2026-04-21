@@ -56,13 +56,6 @@ class AudioRecorder {
         }
     }
 
-    func snapshot() -> [Float] {
-        lock.lock()
-        let copy = pcmBuffer
-        lock.unlock()
-        return copy
-    }
-
     /// 停止录音，返回 PCM 数据。
     func stop() -> [Float] {
         engine?.inputNode.removeTap(onBus: 0)

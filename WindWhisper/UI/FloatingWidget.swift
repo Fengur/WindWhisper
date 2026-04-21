@@ -36,7 +36,7 @@ class FloatingWidgetView: NSView {
     private let textLabel = NSTextField(labelWithString: "")
     private let copyButton = NSButton()
     private let closeButton = NSButton()
-    private let toastLabel = NSTextField(labelWithString: "")
+
 
     private(set) var state: WidgetState = .idle
     private let buttonSize: CGFloat = 44
@@ -57,7 +57,6 @@ class FloatingWidgetView: NSView {
         setupIndicator()
         setupTextLabel()
         setupActionButtons()
-        setupToast()
         setupTrackingArea()
         applyIdleLayout()
     }
@@ -153,8 +152,6 @@ class FloatingWidgetView: NSView {
         addSubview(closeButton)
     }
 
-    private func setupToast() {
-    }
 
     private func setupTrackingArea() {
         let area = NSTrackingArea(
@@ -289,8 +286,6 @@ class FloatingWidgetView: NSView {
         }
     }
 
-    func showToast(_ message: String) {
-    }
 
     // MARK: - Transitions
 
