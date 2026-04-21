@@ -19,8 +19,8 @@ class VoiceEngine: ObservableObject {
     private let injector = TextInjector()
     let widget = FloatingWidgetController()
     private var micvolGuard: OpaquePointer?
-    private var interimTimer: Timer?
-    private var isInterimInFlight = false
+    private var maxDurationTimer: Timer?
+    private let maxRecordingDuration: TimeInterval = 60
 
     static var autoPaste: Bool {
         UserDefaults.standard.object(forKey: "autoPaste") as? Bool ?? true
@@ -51,34 +51,16 @@ class VoiceEngine: ObservableObject {
 
         recorder.start()
         widget.startRecording()
-        startInterimLoop()
-    }
 
-    private func startInterimLoop() {
-        interimTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
-            self?.runInterimTranscription()
-        }
-    }
-
-    private func runInterimTranscription() {
-        guard !isInterimInFlight else { return }
-
-        let pcmSnapshot = recorder.snapshot()
-        guard pcmSnapshot.count > 24000 else { return }
-
-        isInterimInFlight = true
-        recognition.transcribeAsync(pcmData: pcmSnapshot) { [weak self] text in
-            guard let self else { return }
-            self.isInterimInFlight = false
-            if self.state == .recording && !text.isEmpty {
-                self.widget.updateText(text)
-            }
+        maxDurationTimer = Timer.scheduledTimer(withTimeInterval: maxRecordingDuration, repeats: false) { [weak self] _ in
+            Log.info("Max recording duration reached (\(self?.maxRecordingDuration ?? 0)s)")
+            self?.stopRecording()
         }
     }
 
     private func stopRecording() {
-        interimTimer?.invalidate()
-        interimTimer = nil
+        maxDurationTimer?.invalidate()
+        maxDurationTimer = nil
 
         let pcmBuffer = recorder.stop()
 
@@ -94,7 +76,7 @@ class VoiceEngine: ObservableObject {
         recognition.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
             guard let self else { return }
             let elapsed = String(format: "%.1f", CFAbsoluteTimeGetCurrent() - startTime)
-            Log.info("Final recognition done (\(elapsed)s): \(text)")
+            Log.info("Recognition done (\(elapsed)s): \(text)")
             if !text.isEmpty {
                 self.finishWithText(text)
             } else {
