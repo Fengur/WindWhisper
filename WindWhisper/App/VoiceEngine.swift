@@ -19,7 +19,8 @@ class VoiceEngine: ObservableObject {
     private let injector = TextInjector()
     let widget = FloatingWidgetController()
     private var micvolGuard: OpaquePointer?
-    private var maxDurationTimer: Timer?
+    private var countdownTimer: Timer?
+    private var recordingStartTime: Date?
     private let maxRecordingDuration: TimeInterval = 60
 
     static var autoPaste: Bool {
@@ -51,16 +52,24 @@ class VoiceEngine: ObservableObject {
 
         recorder.start()
         widget.startRecording()
+        recordingStartTime = Date()
 
-        maxDurationTimer = Timer.scheduledTimer(withTimeInterval: maxRecordingDuration, repeats: false) { [weak self] _ in
-            Log.info("Max recording duration reached (\(self?.maxRecordingDuration ?? 0)s)")
-            self?.stopRecording()
+        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self, let start = self.recordingStartTime else { return }
+            let elapsed = Date().timeIntervalSince(start)
+            let remaining = Int(self.maxRecordingDuration - elapsed)
+            if remaining <= 0 {
+                self.stopRecording()
+            } else {
+                self.widget.updateText("正在聆听... \(remaining)s", urgent: remaining <= 10)
+            }
         }
     }
 
     private func stopRecording() {
-        maxDurationTimer?.invalidate()
-        maxDurationTimer = nil
+        countdownTimer?.invalidate()
+        countdownTimer = nil
+        recordingStartTime = nil
 
         let pcmBuffer = recorder.stop()
 
