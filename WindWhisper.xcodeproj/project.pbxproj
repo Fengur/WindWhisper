@@ -27,7 +27,6 @@
 		BF51F3754C7C4EEC926898B9 /* SherpaOnnx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3872BF4BBF6F890B758C5231 /* SherpaOnnx.swift */; };
 		C1B418A19531DB97DBB022E3 /* FloatingWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DAC32ACF7B7A1D7C7D3EA9 /* FloatingWidget.swift */; };
 		C1F862C564161BC658A20EE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C1373133D92047B44E25ED /* AppDelegate.swift */; };
-		C6580FA0A2D955489046A922 /* WhisperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */; };
 		C675ED6733E8BCE019F95A6A /* icon_widget@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E15B8B527A7C774DB93F724B /* icon_widget@2x.png */; };
 		E5407D5913835B9D30C244CC /* WindWhisperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */; };
 		E7AA9C27A41C52D1DA70372D /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8CDA8D612B444E75007CA /* StatusBarView.swift */; };
@@ -62,7 +61,6 @@
 		DBF3589E573657145AC4CBA4 /* ggml-base.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-base.bin"; sourceTree = "<group>"; };
 		E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_statusbar@2x.png"; sourceTree = "<group>"; };
 		E15B8B527A7C774DB93F724B /* icon_widget@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_widget@2x.png"; sourceTree = "<group>"; };
-		E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperManager.swift; sourceTree = "<group>"; };
 		EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,7 +141,6 @@
 				3872BF4BBF6F890B758C5231 /* SherpaOnnx.swift */,
 				463E255E992C32B660176F89 /* TextPostProcessor.swift */,
 				A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */,
-				E78A5F614B9DC5C799A8FB06 /* WhisperManager.swift */,
 			);
 			path = Recognition;
 			sourceTree = "<group>";
@@ -278,7 +275,6 @@
 				2D58820936377A602448C6A9 /* TextPostProcessor.swift in Sources */,
 				F8FB5D46E82DA1E60EB19409 /* VoiceEngine.swift in Sources */,
 				11D1DD62D99237D954219C4C /* WhisperBridge.swift in Sources */,
-				C6580FA0A2D955489046A922 /* WhisperManager.swift in Sources */,
 				E5407D5913835B9D30C244CC /* WindWhisperApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
