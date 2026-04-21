@@ -66,6 +66,32 @@ class StreamingRecognizer {
         }
     }
 
+    func finish(completion: @escaping (String) -> Void) {
+        queue.async { [weak self] in
+            guard let self, let recognizer = self.recognizer else {
+                DispatchQueue.main.async { completion("") }
+                return
+            }
+
+            recognizer.inputFinished()
+
+            while recognizer.isReady() {
+                recognizer.decode()
+            }
+
+            let result = recognizer.getResult()
+            let text = TextPostProcessor.process(
+                result.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            )
+
+            recognizer.reset()
+
+            DispatchQueue.main.async {
+                completion(text)
+            }
+        }
+    }
+
     func reset() {
         queue.async { [weak self] in
             self?.recognizer?.reset()

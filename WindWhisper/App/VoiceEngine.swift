@@ -81,24 +81,33 @@ class VoiceEngine: ObservableObject {
             micvolGuard = nil
         }
 
-        let streamResult = streamingText.trimmingCharacters(in: .whitespacesAndNewlines)
+        setState(.transcribing)
+        widget.updateText("识别中...")
 
-        if !streamResult.isEmpty {
-            Log.info("Using streaming result: \(streamResult)")
-            finishWithText(streamResult)
-        } else {
-            setState(.transcribing)
-            widget.updateText("识别中...")
-
-            Log.info("Streaming empty, falling back to offline recognition")
-            recognition.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
+        if let streaming = streamingRecognizer {
+            streaming.finish { [weak self] text in
                 guard let self else { return }
-                Log.info("Offline result: \(text)")
+                Log.info("Streaming final result: \(text)")
                 if !text.isEmpty {
                     self.finishWithText(text)
                 } else {
-                    self.widget.collapse()
+                    self.fallbackOffline(pcmBuffer: pcmBuffer)
                 }
+            }
+        } else {
+            fallbackOffline(pcmBuffer: pcmBuffer)
+        }
+    }
+
+    private func fallbackOffline(pcmBuffer: [Float]) {
+        Log.info("Falling back to offline recognition")
+        recognition.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
+            guard let self else { return }
+            Log.info("Offline result: \(text)")
+            if !text.isEmpty {
+                self.finishWithText(text)
+            } else {
+                self.widget.collapse()
                 self.setState(.idle)
             }
         }
