@@ -16,21 +16,17 @@ class VoiceEngine: ObservableObject {
 
     private let recorder = AudioRecorder()
     private let recognition = RecognitionManager()
-    private var streamingRecognizer: StreamingRecognizer?
     private let injector = TextInjector()
     let widget = FloatingWidgetController()
     private var micvolGuard: OpaquePointer?
-    private var streamingText: String = ""
+    private var interimTimer: Timer?
+    private var isInterimInFlight = false
 
     static var autoPaste: Bool {
         UserDefaults.standard.object(forKey: "autoPaste") as? Bool ?? true
     }
 
-    private init() {
-        if let dir = Bundle.main.path(forResource: "paraformer-streaming", ofType: nil) {
-            streamingRecognizer = StreamingRecognizer(modelDir: dir)
-        }
-    }
+    private init() {}
 
     func toggle() {
         switch state {
@@ -45,7 +41,6 @@ class VoiceEngine: ObservableObject {
 
     private func startRecording() {
         setState(.recording)
-        streamingText = ""
 
         do {
             let device = try MicvolBridge.defaultInputDevice()
@@ -54,26 +49,38 @@ class VoiceEngine: ObservableObject {
             Log.error("micvol: \(error), continuing without volume boost")
         }
 
-        streamingRecognizer?.reset()
-        streamingRecognizer?.onResult = { [weak self] text, isEndpoint in
-            guard let self, self.state == .recording else { return }
-            self.streamingText = text
-            self.widget.updateText(text)
-            Log.info("Streaming: \(text.prefix(60))\(isEndpoint ? " [endpoint]" : "")")
-        }
-
-        recorder.onSamples = { [weak self] samples in
-            self?.streamingRecognizer?.feedSamples(samples)
-        }
-
         recorder.start()
         widget.startRecording()
+        startInterimLoop()
+    }
+
+    private func startInterimLoop() {
+        interimTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+            self?.runInterimTranscription()
+        }
+    }
+
+    private func runInterimTranscription() {
+        guard !isInterimInFlight else { return }
+
+        let pcmSnapshot = recorder.snapshot()
+        guard pcmSnapshot.count > 24000 else { return }
+
+        isInterimInFlight = true
+        recognition.transcribeAsync(pcmData: pcmSnapshot) { [weak self] text in
+            guard let self else { return }
+            self.isInterimInFlight = false
+            if self.state == .recording && !text.isEmpty {
+                self.widget.updateText(text)
+            }
+        }
     }
 
     private func stopRecording() {
+        interimTimer?.invalidate()
+        interimTimer = nil
+
         let pcmBuffer = recorder.stop()
-        recorder.onSamples = nil
-        streamingRecognizer?.reset()
 
         if let guard_ = micvolGuard {
             try? MicvolBridge.guardRestore(guard_)

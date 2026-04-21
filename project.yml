@@ -21,11 +21,7 @@ targets:
       - path: WindWhisper
         excludes:
           - "Resources/sensevoice"
-          - "Resources/paraformer-streaming"
       - path: WindWhisper/Resources/sensevoice
-        type: folder
-        buildPhase: resources
-      - path: WindWhisper/Resources/paraformer-streaming
         type: folder
         buildPhase: resources
     settings:
