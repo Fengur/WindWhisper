@@ -47,7 +47,7 @@ struct SettingsView: View {
             HStack {
                 Text("触发方式")
                 Spacer()
-                Text("双击 Control 键 / 点击悬浮按钮")
+                Text("点击悬浮球 / 状态栏图标")
                     .foregroundColor(.secondary)
             }
 
