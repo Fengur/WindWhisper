@@ -5,6 +5,7 @@ class AudioRecorder {
     private var engine: AVAudioEngine?
     private var pcmBuffer: [Float] = []
     private let lock = NSLock()
+    var onSamples: (([Float]) -> Void)?
 
     func start() {
         pcmBuffer = []
@@ -44,6 +45,7 @@ class AudioRecorder {
                 self.lock.lock()
                 self.pcmBuffer.append(contentsOf: samples)
                 self.lock.unlock()
+                self.onSamples?(samples)
             }
         }
 

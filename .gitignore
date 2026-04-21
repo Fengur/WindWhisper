@@ -10,3 +10,4 @@ Libraries/libonnxruntime.a
 Libraries/sherpa-onnx.xcframework/
 WindWhisper/Resources/sensevoice/
 WindWhisper/Resources/ggml-*.bin
+WindWhisper/Resources/paraformer-streaming/

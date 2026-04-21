@@ -16,24 +16,28 @@ class VoiceEngine: ObservableObject {
 
     private let recorder = AudioRecorder()
     private let recognition = RecognitionManager()
+    private var streamingRecognizer: StreamingRecognizer?
     private let injector = TextInjector()
     let widget = FloatingWidgetController()
     private var micvolGuard: OpaquePointer?
-    private var interimTimer: Timer?
-    private var isInterimInFlight = false
+    private var streamingText: String = ""
 
     static var autoPaste: Bool {
         UserDefaults.standard.object(forKey: "autoPaste") as? Bool ?? true
     }
 
-    private init() {}
+    private init() {
+        if let dir = Bundle.main.path(forResource: "paraformer-streaming", ofType: nil) {
+            streamingRecognizer = StreamingRecognizer(modelDir: dir)
+        }
+    }
 
     func toggle() {
         switch state {
         case .idle:
             startRecording()
         case .recording:
-            stopAndTranscribe()
+            stopRecording()
         case .transcribing:
             break
         }
@@ -41,6 +45,7 @@ class VoiceEngine: ObservableObject {
 
     private func startRecording() {
         setState(.recording)
+        streamingText = ""
 
         do {
             let device = try MicvolBridge.defaultInputDevice()
@@ -49,72 +54,63 @@ class VoiceEngine: ObservableObject {
             Log.error("micvol: \(error), continuing without volume boost")
         }
 
-        recorder.start()
-        widget.startRecording()
-        startInterimLoop()
-    }
-
-    private func startInterimLoop() {
-        interimTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
-            self?.runInterimTranscription()
-        }
-    }
-
-    private func runInterimTranscription() {
-        guard !isInterimInFlight else { return }
-
-        let pcmSnapshot = recorder.snapshot()
-        guard pcmSnapshot.count > 24000 else { return }
-
-        let audioDuration = String(format: "%.1f", Double(pcmSnapshot.count) / 16000.0)
-        Log.info("Interim transcription start (\(audioDuration)s audio)")
-
-        isInterimInFlight = true
-        let startTime = CFAbsoluteTimeGetCurrent()
-        recognition.transcribeAsync(pcmData: pcmSnapshot) { [weak self] text in
-            guard let self else { return }
-            let elapsed = String(format: "%.1f", CFAbsoluteTimeGetCurrent() - startTime)
-            Log.info("Interim transcription done (\(elapsed)s): \(text.prefix(50))")
-            self.isInterimInFlight = false
-            if self.state == .recording && !text.isEmpty {
-                self.widget.updateText(text)
+        streamingRecognizer?.reset()
+        streamingRecognizer?.onResult = { [weak self] text, isEndpoint in
+            guard let self, self.state == .recording else { return }
+            self.streamingText = text
+            self.widget.updateText(text)
+            if isEndpoint {
+                Log.info("Streaming endpoint: \(text.prefix(50))")
             }
         }
+
+        recorder.onSamples = { [weak self] samples in
+            self?.streamingRecognizer?.feedSamples(samples)
+        }
+
+        recorder.start()
+        widget.startRecording()
     }
 
-
-    private func stopAndTranscribe() {
-        interimTimer?.invalidate()
-        interimTimer = nil
-
+    private func stopRecording() {
         let pcmBuffer = recorder.stop()
+        recorder.onSamples = nil
 
         if let guard_ = micvolGuard {
             try? MicvolBridge.guardRestore(guard_)
             micvolGuard = nil
         }
 
-        setState(.transcribing)
-        widget.updateText("识别中...")
+        let streamResult = streamingText.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        let audioDuration = String(format: "%.1f", Double(pcmBuffer.count) / 16000.0)
-        Log.info("Final transcription start (\(audioDuration)s audio)")
-        let startTime = CFAbsoluteTimeGetCurrent()
-        recognition.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
-            guard let self else { return }
-            let elapsed = String(format: "%.1f", CFAbsoluteTimeGetCurrent() - startTime)
-            Log.info("Final transcription done (\(elapsed)s): \(text)")
-            if !text.isEmpty {
-                self.lastText = text
-                self.widget.showResult(text)
-                if Self.autoPaste {
-                    self.injector.inject(text: text)
+        if !streamResult.isEmpty {
+            Log.info("Using streaming result: \(streamResult)")
+            finishWithText(streamResult)
+        } else {
+            setState(.transcribing)
+            widget.updateText("识别中...")
+
+            Log.info("Streaming empty, falling back to offline recognition")
+            recognition.transcribeAsync(pcmData: pcmBuffer) { [weak self] text in
+                guard let self else { return }
+                Log.info("Offline result: \(text)")
+                if !text.isEmpty {
+                    self.finishWithText(text)
+                } else {
+                    self.widget.collapse()
                 }
-            } else {
-                self.widget.collapse()
+                self.setState(.idle)
             }
-            self.setState(.idle)
         }
+    }
+
+    private func finishWithText(_ text: String) {
+        lastText = text
+        widget.showResult(text)
+        if Self.autoPaste {
+            injector.inject(text: text)
+        }
+        setState(.idle)
     }
 
     private func setState(_ newState: State) {
