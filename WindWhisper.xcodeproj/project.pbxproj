@@ -11,7 +11,6 @@
 		0CF80188C17FC52DA777DCF1 /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */; };
 		11D1DD62D99237D954219C4C /* WhisperBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */; };
 		12DA2BF01B38B4FD4C4C5928 /* ggml-base.bin in Resources */ = {isa = PBXBuildFile; fileRef = DBF3589E573657145AC4CBA4 /* ggml-base.bin */; };
-		1463C8D6C8935AC7123088B0 /* DoubleTapTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAC9BEFF1A705821E5B89AF /* DoubleTapTrigger.swift */; };
 		1F89D6FBE5A9444721FF8B7C /* MicvolBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7658080BC3C17AECB204DDA /* MicvolBridge.swift */; };
 		29F2B97CA2E283BC40ADF005 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 46CCB2F13F5FA6B3DB3083B7 /* AppIcon.icns */; };
 		2D58820936377A602448C6A9 /* TextPostProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463E255E992C32B660176F89 /* TextPostProcessor.swift */; };
@@ -36,7 +35,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0CAC9BEFF1A705821E5B89AF /* DoubleTapTrigger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTapTrigger.swift; sourceTree = "<group>"; };
 		11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindWhisperApp.swift; sourceTree = "<group>"; };
 		3872BF4BBF6F890B758C5231 /* SherpaOnnx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnx.swift; sourceTree = "<group>"; };
 		3C916F7582D7E8643851867D /* TextInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInjector.swift; sourceTree = "<group>"; };
@@ -44,6 +42,7 @@
 		46CCB2F13F5FA6B3DB3083B7 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		535E791EE2C613C4714C7968 /* RecognitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognitionManager.swift; sourceTree = "<group>"; };
 		54CBE295F8EA76C5F9DB6EBF /* WindWhisper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindWhisper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		55CFE3AA175C0F60C3128188 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5AC8CDA8D612B444E75007CA /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
 		78DAC32ACF7B7A1D7C7D3EA9 /* FloatingWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingWidget.swift; sourceTree = "<group>"; };
 		7EC3F7F46014800CCBDAE30E /* ggml-small.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-small.bin"; sourceTree = "<group>"; };
@@ -91,7 +90,6 @@
 		2B34D7D3BDB1CC70768F44A6 /* Input */ = {
 			isa = PBXGroup;
 			children = (
-				0CAC9BEFF1A705821E5B89AF /* DoubleTapTrigger.swift */,
 				3C916F7582D7E8643851867D /* TextInjector.swift */,
 			);
 			path = Input;
@@ -148,6 +146,7 @@
 		A2652451CF48E902834A7ADC /* WindWhisper */ = {
 			isa = PBXGroup;
 			children = (
+				55CFE3AA175C0F60C3128188 /* Info.plist */,
 				274C1893F88A38EE79857146 /* App */,
 				F84A86B3470EC9A1E2A28DB8 /* Audio */,
 				2B34D7D3BDB1CC70768F44A6 /* Input */,
@@ -262,7 +261,6 @@
 			files = (
 				C1F862C564161BC658A20EE0 /* AppDelegate.swift in Sources */,
 				FE538976D208DB1F8ED2E408 /* AudioRecorder.swift in Sources */,
-				1463C8D6C8935AC7123088B0 /* DoubleTapTrigger.swift in Sources */,
 				C1B418A19531DB97DBB022E3 /* FloatingWidget.swift in Sources */,
 				3F50B76115BB19B5E312FE98 /* Logger.swift in Sources */,
 				1F89D6FBE5A9444721FF8B7C /* MicvolBridge.swift in Sources */,
@@ -292,14 +290,11 @@
 					"$(inherited)",
 					"\"Libraries\"",
 				);
-				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Libraries",
 					"$(PROJECT_DIR)/Libraries/sherpa-onnx.xcframework/macos-arm64_x86_64/Headers",
 				);
-				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
-				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "WindWhisper needs microphone access for voice input.";
+				INFOPLIST_FILE = WindWhisper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -407,14 +402,11 @@
 					"$(inherited)",
 					"\"Libraries\"",
 				);
-				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Libraries",
 					"$(PROJECT_DIR)/Libraries/sherpa-onnx.xcframework/macos-arm64_x86_64/Headers",
 				);
-				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
-				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "WindWhisper needs microphone access for voice input.";
+				INFOPLIST_FILE = WindWhisper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

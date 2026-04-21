@@ -9,6 +9,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
 
+        TextInjector.ensureAccessibility()
         setupStatusItem()
         setupPopover()
 
@@ -16,9 +17,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self?.voiceEngine.toggle()
         }
 
-        DoubleTapTrigger.shared.register { [weak self] in
-            self?.voiceEngine.toggle()
-        }
     }
 
     private func setupStatusItem() {
@@ -90,11 +88,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
 
         let toggleTitle = voiceEngine.state == .recording ? "停止录音" : "开始录音"
-        menu.addItem(NSMenuItem(title: toggleTitle, action: #selector(toggleRecording), keyEquivalent: "r"))
-
-        let fnHint = NSMenuItem(title: "双击 Fn 开始/停止", action: nil, keyEquivalent: "")
-        fnHint.isEnabled = false
-        menu.addItem(fnHint)
+        menu.addItem(NSMenuItem(title: toggleTitle, action: #selector(toggleRecording), keyEquivalent: ""))
 
         menu.addItem(NSMenuItem.separator())
 

@@ -17,6 +17,13 @@ targets:
       - package: SnapKit
       - framework: Libraries/sherpa-onnx.xcframework
         embed: false
+    info:
+      path: WindWhisper/Info.plist
+      properties:
+        CFBundleIconFile: AppIcon
+        LSUIElement: true
+        NSMicrophoneUsageDescription: "WindWhisper needs microphone access for voice input."
+        NSAppleEventsUsageDescription: "WindWhisper needs to simulate keyboard input to paste recognized text."
     sources:
       - path: WindWhisper
         excludes:
@@ -51,10 +58,6 @@ targets:
           - -framework Accelerate
           - -framework CoreML
           - -lstdc++
-        GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.fengur.WindWhisper
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
-        INFOPLIST_KEY_NSMicrophoneUsageDescription: "WindWhisper needs microphone access for voice input."
-        INFOPLIST_KEY_LSUIElement: true
-        INFOPLIST_KEY_CFBundleIconFile: AppIcon

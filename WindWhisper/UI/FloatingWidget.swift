@@ -483,11 +483,19 @@ class FloatingWidgetView: NSView {
 
     override func rightMouseDown(with event: NSEvent) {
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "隐藏悬浮按钮", action: #selector(hideWidget), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "WindWhisper", action: nil, keyEquivalent: ""))
+        menu.items.last?.isEnabled = false
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "隐藏悬浮球", action: #selector(hideWidget), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "设置...", action: #selector(openSettings), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "退出", action: #selector(quitApp), keyEquivalent: ""))
         NSMenu.popUpContextMenu(menu, with: event, for: self)
     }
 
     @objc private func hideWidget() { onHide?() }
+    @objc private func openSettings() { SettingsWindowController.shared.show() }
+    @objc private func quitApp() { NSApp.terminate(nil) }
     @objc private func copyTapped() { onCopy?() }
     @objc private func closeTapped() { onClose?() }
 }
@@ -702,10 +710,16 @@ class FloatingWidgetController {
 
     private func handleDragEnd() {
         guard let panel else { return }
-        if widgetView?.state == .idle && panel.frame.width <= 48 {
+        if panel.frame.width <= 48 {
             homePosition = panel.frame.origin
-            savePosition()
+        } else {
+            let screen = screenForPanel()
+            let isRight = panel.frame.midX > screen.visibleFrame.midX
+            let ballX = isRight ? panel.frame.maxX - 48 : panel.frame.origin.x
+            let ballY = panel.frame.origin.y + (panel.frame.height - 48) / 2
+            homePosition = NSPoint(x: ballX, y: ballY)
         }
+        savePosition()
     }
 
     private func savePosition() {
