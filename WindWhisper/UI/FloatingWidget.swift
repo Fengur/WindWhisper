@@ -109,7 +109,9 @@ class FloatingWidgetView: NSView {
         textLabel.font = .systemFont(ofSize: 13)
         textLabel.textColor = .labelColor
         textLabel.lineBreakMode = .byWordWrapping
-        textLabel.maximumNumberOfLines = 4
+        // 20 行上限防滥长；配合 FloatingWidgetController.resizePanelForResult
+        // 会按实际文本测高撑开 panel，保证正常长度全显示。
+        textLabel.maximumNumberOfLines = 20
         textLabel.cell?.wraps = true
         textLabel.isHidden = true
         textLabel.alphaValue = 0
@@ -546,7 +548,56 @@ class FloatingWidgetController {
 
     func showResult(_ text: String) {
         lastResultText = text
+        resizePanelForResult(text: text)
         widgetView?.setState(.result, text: text)
+    }
+
+    /// 根据文本内容测量需要的高度，按需把 panel 撑高。
+    /// 基础高度 56（单行文本）；超过 56 就重新布局到能容纳全文的高度。
+    private func resizePanelForResult(text: String) {
+        guard let panel else { return }
+
+        let panelWidth: CGFloat = 460
+        let baseHeight: CGFloat = 56
+        // 文本可用宽度 —— 参考 applyResultLayout 里的 width.lessThanOrEqualTo(300)
+        let textWidth: CGFloat = 300
+        // 上下各 14pt padding,和 56 基础高度下的"单行居中"视觉对齐
+        let verticalPadding: CGFloat = 28
+
+        let font = NSFont.systemFont(ofSize: 13)
+        let rect = (text as NSString).boundingRect(
+            with: NSSize(width: textWidth, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font])
+        let textHeight = ceil(rect.height)
+
+        // 先算理想高度
+        var targetHeight = max(baseHeight, textHeight + verticalPadding)
+
+        // 屏幕高度钳制：panel 顶/底各留 20pt 边距
+        let screen = screenForPanel()
+        let visible = screen.visibleFrame
+        targetHeight = min(targetHeight, visible.height - 40)
+
+        if abs(panel.frame.height - targetHeight) < 0.5 { return }
+
+        // 维持 X 方向布局（左吸/右吸跟 expandPanel 一致）
+        let isRight = panel.frame.midX > visible.midX
+        var newX = homePosition.x
+        if isRight {
+            newX = homePosition.x + 48 - panelWidth
+        }
+
+        // Y 以 homePosition 为中心向上向下对称扩展，然后钳制到屏幕内
+        var newY = homePosition.y - (targetHeight - 48) / 2
+        newY = max(visible.minY + 20, min(newY, visible.maxY - targetHeight - 20))
+
+        let newFrame = NSRect(x: newX, y: newY, width: panelWidth, height: targetHeight)
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.3
+            ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            panel.animator().setFrame(newFrame, display: true)
+        }
     }
 
     func collapse() {
