@@ -517,12 +517,43 @@ class FloatingWidgetController {
 
     var isVisible: Bool { panel?.isVisible ?? false }
 
+    private var screenChangeObserver: NSObjectProtocol?
+
     func setup(onToggle: @escaping () -> Void) {
         self.onToggle = onToggle
         createPanel()
 
+        screenChangeObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didChangeScreenParametersNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.handleScreenParametersChanged()
+        }
+
         let shouldShow = UserDefaults.standard.object(forKey: Self.visibleKey) as? Bool ?? true
         if shouldShow { show() }
+    }
+
+    deinit {
+        if let screenChangeObserver {
+            NotificationCenter.default.removeObserver(screenChangeObserver)
+        }
+    }
+
+    /// 屏幕配置变动(插拔显示器、改分辨率、Dock 改大小)后重新校验位置。
+    /// 如果 homePosition 已不在任何屏幕的 visibleFrame 内,回到默认位置并持久化。
+    private func handleScreenParametersChanged() {
+        guard let panel else { return }
+        if Self.isBallPositionVisible(homePosition) {
+            return
+        }
+        Log.info("Screen parameters changed; homePosition=\(homePosition) out of visibleFrame, resetting")
+        setDefaultPosition()
+        savePosition()
+        if panel.frame.width <= 48 {
+            panel.setFrameOrigin(homePosition)
+        }
     }
 
     func show() {
@@ -739,16 +770,20 @@ class FloatingWidgetController {
         guard let panel else { return }
 
         if let x = UserDefaults.standard.object(forKey: Self.posXKey) as? CGFloat,
-           let y = UserDefaults.standard.object(forKey: Self.posYKey) as? CGFloat {
-            let ballRight = NSPoint(x: x + 48, y: y + 24)
-            if NSScreen.screens.contains(where: { $0.frame.contains(ballRight) }) {
-                homePosition = NSPoint(x: x, y: y)
-                panel.setFrameOrigin(homePosition)
-                return
-            }
+           let y = UserDefaults.standard.object(forKey: Self.posYKey) as? CGFloat,
+           Self.isBallPositionVisible(NSPoint(x: x, y: y)) {
+            homePosition = NSPoint(x: x, y: y)
+            panel.setFrameOrigin(homePosition)
+            return
         }
 
         setDefaultPosition()
+    }
+
+    /// 悬浮球位置是否完整位于某个屏幕的 visibleFrame 里(排除 Dock / 菜单栏覆盖区)。
+    private static func isBallPositionVisible(_ origin: NSPoint) -> Bool {
+        let ballFrame = NSRect(x: origin.x, y: origin.y, width: 48, height: 48)
+        return NSScreen.screens.contains { NSContainsRect($0.visibleFrame, ballFrame) }
     }
 
     private func setDefaultPosition() {
@@ -761,16 +796,42 @@ class FloatingWidgetController {
 
     private func handleDragEnd() {
         guard let panel else { return }
+        let rawOrigin: NSPoint
         if panel.frame.width <= 48 {
-            homePosition = panel.frame.origin
+            rawOrigin = panel.frame.origin
         } else {
             let screen = screenForPanel()
             let isRight = panel.frame.midX > screen.visibleFrame.midX
             let ballX = isRight ? panel.frame.maxX - 48 : panel.frame.origin.x
             let ballY = panel.frame.origin.y + (panel.frame.height - 48) / 2
-            homePosition = NSPoint(x: ballX, y: ballY)
+            rawOrigin = NSPoint(x: ballX, y: ballY)
+        }
+        homePosition = Self.clampBallOriginToVisibleFrame(rawOrigin, fallback: screenForPanel())
+        if panel.frame.width <= 48 {
+            panel.setFrameOrigin(homePosition)
         }
         savePosition()
+    }
+
+    /// 把悬浮球 origin 限制到某个屏幕的 visibleFrame 内部,防止拖到 Dock / 菜单栏后面导致下次启动消失。
+    /// 优先保留用户原先选的屏幕;若完全不在任何 visibleFrame 内,回到 fallback 屏幕的中右位置。
+    private static func clampBallOriginToVisibleFrame(_ origin: NSPoint, fallback: NSScreen) -> NSPoint {
+        let ballSize: CGFloat = 48
+        let ballRect = NSRect(x: origin.x, y: origin.y, width: ballSize, height: ballSize)
+        // 选用户最接近的屏幕(按 ballRect 中心与各屏 visibleFrame 的距离排序)
+        let center = NSPoint(x: ballRect.midX, y: ballRect.midY)
+        let target = NSScreen.screens
+            .min(by: { distance(center, $0.visibleFrame) < distance(center, $1.visibleFrame) }) ?? fallback
+        let vf = target.visibleFrame
+        let clampedX = min(max(origin.x, vf.minX), vf.maxX - ballSize)
+        let clampedY = min(max(origin.y, vf.minY), vf.maxY - ballSize)
+        return NSPoint(x: clampedX, y: clampedY)
+    }
+
+    private static func distance(_ p: NSPoint, _ r: NSRect) -> CGFloat {
+        let dx = max(r.minX - p.x, 0, p.x - r.maxX)
+        let dy = max(r.minY - p.y, 0, p.y - r.maxY)
+        return hypot(dx, dy)
     }
 
     private func savePosition() {

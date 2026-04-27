@@ -92,6 +92,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(NSMenuItem.separator())
 
+        let recoverItem = NSMenuItem(title: "显示悬浮球 (重置位置)", action: #selector(recoverWidget), keyEquivalent: "")
+        recoverItem.target = self
+        menu.addItem(recoverItem)
+
         let settingsItem = NSMenuItem(title: "设置...", action: #selector(openSettings), keyEquivalent: ",")
         settingsItem.target = self
         menu.addItem(settingsItem)
@@ -110,6 +114,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func openSettings() {
         SettingsWindowController.shared.show()
+    }
+
+    @objc private func recoverWidget() {
+        voiceEngine.widget.resetPosition()
+        voiceEngine.widget.show()
     }
 
     private func updateIcon(_ state: VoiceEngine.State) {
