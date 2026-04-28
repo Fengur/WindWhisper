@@ -75,12 +75,13 @@ class FloatingWidgetView: NSView {
     }
 
     private func setupIcon() {
+        // iconContainer 只负责定位 / 波纹参考,不裁切(阴影已烘焙进源图)
         iconContainer.wantsLayer = true
         iconContainer.layer?.cornerRadius = buttonSize / 2
-        iconContainer.layer?.masksToBounds = true
+        iconContainer.layer?.masksToBounds = false
         addSubview(iconContainer)
 
-        buttonIcon.imageScaling = .scaleAxesIndependently
+        buttonIcon.imageScaling = .scaleProportionallyUpOrDown
         buttonIcon.image = NSImage(named: "icon_widget")
         iconContainer.addSubview(buttonIcon)
     }
@@ -176,11 +177,8 @@ class FloatingWidgetView: NSView {
         buttonIcon.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
         }
-        backgroundEffect.snp.remakeConstraints { make in
-            make.edges.equalTo(iconContainer)
-        }
-        backgroundEffect.layer?.cornerRadius = buttonSize / 2
-        backgroundEffect.layer?.backgroundColor = NSColor.clear.cgColor
+        // NSVisualEffectView 的材质 layer 独立渲染,设 clear backgroundColor 无效,必须 hide
+        backgroundEffect.isHidden = true
     }
 
     private func applyExpandedLayout() {
@@ -208,6 +206,7 @@ class FloatingWidgetView: NSView {
             make.width.lessThanOrEqualTo(320)
         }
 
+        backgroundEffect.isHidden = false
         backgroundEffect.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -245,6 +244,7 @@ class FloatingWidgetView: NSView {
             make.width.lessThanOrEqualTo(300)
         }
 
+        backgroundEffect.isHidden = false
         backgroundEffect.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
         }
