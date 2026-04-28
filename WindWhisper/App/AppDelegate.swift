@@ -24,7 +24,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let button = statusItem.button {
             if let img = NSImage(named: "icon_statusbar") {
                 img.size = NSSize(width: 18, height: 18)
-                img.isTemplate = true
+                // 沿用设计师彩色版,不走 template 自动染色
+                img.isTemplate = false
                 button.image = img
             }
             button.toolTip = "WindWhisper — 点击录音 / 右键菜单"

@@ -54,13 +54,35 @@
 
 ## 设置
 
-右键悬浮球 → 设置，或状态栏右键 → 设置：
+**打开设置**：状态栏图标右键 → **设置…**（快捷键 `⌘,`）。
 
 | 选项 | 说明 |
 |------|------|
-| 识别语言 | 中文 / English / 自动检测 |
-| 自动粘贴到输入框 | 识别完成后自动 Cmd+V |
-| 显示悬浮按钮 | 显示/隐藏悬浮球 |
+| **识别语言** | `中文` / `English` / `自动检测`。自动检测支持中英日韩粤,偶有误判时可固定语种。 |
+| **自动粘贴到输入框** | 识别完成后自动 `Cmd+V` 到当前焦点输入框。关闭后仅复制到剪贴板,需手动粘贴。 |
+| **显示悬浮按钮** | 关闭后只保留状态栏入口,屏幕上不再有常驻悬浮球。 |
+| **重置位置** | 把悬浮球弹回屏幕右侧默认位置。多屏切换 / 悬浮球被拖出可见区后用这个。 |
+
+### 状态栏右键菜单
+
+- **状态**:实时显示 `就绪` / `录音中` / `识别中`
+- **上次**:最近一次识别的文本预览
+- **开始 / 停止录音**:键盘党可以只用状态栏,不碰悬浮球
+- **显示悬浮球 (重置位置)**:悬浮球消失时的兜底入口 —— 强制重置到默认位置并显示
+- **设置…** / **退出 WindWhisper**(`⌘Q`)
+
+### 权限
+
+| 权限 | 用途 | 必须? |
+|------|------|------|
+| 麦克风 | 录音 | 必须 |
+| 辅助功能 | 自动粘贴(模拟 `Cmd+V`) | 仅在开启"自动粘贴"时需要 |
+
+辅助功能授权后,**需要重启 App 一次**才能生效。
+
+### 配置持久化
+
+所有设置存在 `~/Library/Preferences/com.windwhisper.app.plist`(由 `UserDefaults` 管理),卸载重装会保留。悬浮球的最后位置也存在这里。
 
 ## 技术实现
 
@@ -143,6 +165,13 @@ xcodebuild -project WindWhisper.xcodeproj -scheme WindWhisper -configuration Rel
 - 🔲 浮窗视觉升级（风语者主题动效）
 - 🔲 设备热插拔监听
 
+## 反馈
+
+- 🐛 **Bug / 功能建议**:提 [Issue](https://github.com/Fengur/WindWhisper/issues)
+- 📮 **邮件**:fengur@qq.com
+
+欢迎附上 macOS 版本 / 机型 / 复现步骤,日志位于 `~/Library/Logs/WindWhisper/`。
+
 ## 致谢
 
 - [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) — 离线语音识别框架
@@ -190,6 +219,31 @@ Download the latest release from [Releases](https://github.com/Fengur/WindWhispe
 3. **Click again** to stop and recognize
 4. Text appears in panel and auto-pastes to focused input field
 5. Click **copy** or **×** to dismiss
+
+### Settings
+
+Open via status bar icon → right-click → **Settings…** (`⌘,`):
+
+| Option | Description |
+|--------|-------------|
+| **Recognition Language** | `中文` / `English` / `Auto`. Auto covers zh/en/ja/ko/yue; pin to a language if detection misfires. |
+| **Auto-paste** | Paste result via simulated `Cmd+V` to focused input. When off, text only goes to clipboard. |
+| **Show Floating Bubble** | Hide the always-on bubble; status bar icon still works. |
+| **Reset Position** | Snap bubble back to the default right-edge spot. Use after multi-monitor changes. |
+
+Status bar right-click menu also provides state readout, last result preview, start/stop, **Show Bubble (reset position)** as a fallback if the bubble goes missing, and quit.
+
+### Permissions
+
+- **Microphone** — required
+- **Accessibility** — required only if you enable auto-paste (to simulate `Cmd+V`). Restart the app once after granting.
+
+### Feedback
+
+- Bugs / feature requests: [Issues](https://github.com/Fengur/WindWhisper/issues)
+- Email: fengur@qq.com
+
+Logs live at `~/Library/Logs/WindWhisper/`.
 
 ### Tech Stack
 
