@@ -1,7 +1,7 @@
 # WindWhisper 风语者
 
 <p align="center">
-  <img src="docs/appicon-source.png" width="128" height="128" alt="WindWhisper">
+  <img src="docs/appicon.png" width="128" height="128" alt="WindWhisper">
 </p>
 
 <p align="center">
