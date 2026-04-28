@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		04255DC069D471F4489E2143 /* sensevoice in Resources */ = {isa = PBXBuildFile; fileRef = 7F4ED6AE1DADC6EF8A2E7816 /* sensevoice */; };
 		0CF80188C17FC52DA777DCF1 /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */; };
-		0D200ED936AA0D903170E7CA /* AppIcon.source.png in Resources */ = {isa = PBXBuildFile; fileRef = E2C207946AF54735BAE65591 /* AppIcon.source.png */; };
 		11D1DD62D99237D954219C4C /* WhisperBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9FF211C553CDA22C9028E /* WhisperBridge.swift */; };
 		12DA2BF01B38B4FD4C4C5928 /* ggml-base.bin in Resources */ = {isa = PBXBuildFile; fileRef = DBF3589E573657145AC4CBA4 /* ggml-base.bin */; };
 		1F89D6FBE5A9444721FF8B7C /* MicvolBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7658080BC3C17AECB204DDA /* MicvolBridge.swift */; };
@@ -20,7 +19,6 @@
 		4E621523290FCEDE84EDEAD0 /* icon_statusbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D323BCB593F013A72CEF772 /* icon_statusbar.png */; };
 		4F01BCC24681F8D7025EA6FE /* ggml-small.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7EC3F7F46014800CCBDAE30E /* ggml-small.bin */; };
 		5222E4F90AE7D512375E8DDC /* RecognitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E791EE2C613C4714C7968 /* RecognitionManager.swift */; };
-		5EB181D18FB2CBA3CB56489D /* icon_brand.source.png in Resources */ = {isa = PBXBuildFile; fileRef = 03D5F5B59DA634EFDD754A35 /* icon_brand.source.png */; };
 		6661EBB73566F2885B413F34 /* icon_widget.png in Resources */ = {isa = PBXBuildFile; fileRef = C59BFE2C4C7A8A1B31D08372 /* icon_widget.png */; };
 		8D8CFE01DE7D43B9224925FA /* icon_statusbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */; };
 		BAC6713B8A56CC80F59400B7 /* sherpa-onnx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C71A78F40733DF1E4CE6B5FC /* sherpa-onnx.xcframework */; };
@@ -37,7 +35,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		03D5F5B59DA634EFDD754A35 /* icon_brand.source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_brand.source.png; sourceTree = "<group>"; };
 		11D6C36B2C16A2F65227FA64 /* WindWhisperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindWhisperApp.swift; sourceTree = "<group>"; };
 		3872BF4BBF6F890B758C5231 /* SherpaOnnx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnx.swift; sourceTree = "<group>"; };
 		3C916F7582D7E8643851867D /* TextInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInjector.swift; sourceTree = "<group>"; };
@@ -63,7 +60,6 @@
 		DBF3589E573657145AC4CBA4 /* ggml-base.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-base.bin"; sourceTree = "<group>"; };
 		E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_statusbar@2x.png"; sourceTree = "<group>"; };
 		E15B8B527A7C774DB93F724B /* icon_widget@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_widget@2x.png"; sourceTree = "<group>"; };
-		E2C207946AF54735BAE65591 /* AppIcon.source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIcon.source.png; sourceTree = "<group>"; };
 		EE167C63340A1A57B46AAD45 /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -165,10 +161,8 @@
 			isa = PBXGroup;
 			children = (
 				46CCB2F13F5FA6B3DB3083B7 /* AppIcon.icns */,
-				E2C207946AF54735BAE65591 /* AppIcon.source.png */,
 				DBF3589E573657145AC4CBA4 /* ggml-base.bin */,
 				7EC3F7F46014800CCBDAE30E /* ggml-small.bin */,
-				03D5F5B59DA634EFDD754A35 /* icon_brand.source.png */,
 				8D323BCB593F013A72CEF772 /* icon_statusbar.png */,
 				E10069DA62FB53FFADAA0810 /* icon_statusbar@2x.png */,
 				C59BFE2C4C7A8A1B31D08372 /* icon_widget.png */,
@@ -248,10 +242,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				29F2B97CA2E283BC40ADF005 /* AppIcon.icns in Resources */,
-				0D200ED936AA0D903170E7CA /* AppIcon.source.png in Resources */,
 				12DA2BF01B38B4FD4C4C5928 /* ggml-base.bin in Resources */,
 				4F01BCC24681F8D7025EA6FE /* ggml-small.bin in Resources */,
-				5EB181D18FB2CBA3CB56489D /* icon_brand.source.png in Resources */,
 				4E621523290FCEDE84EDEAD0 /* icon_statusbar.png in Resources */,
 				8D8CFE01DE7D43B9224925FA /* icon_statusbar@2x.png in Resources */,
 				6661EBB73566F2885B413F34 /* icon_widget.png in Resources */,

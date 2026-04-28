@@ -1,7 +1,7 @@
 # WindWhisper 风语者
 
 <p align="center">
-  <img src="WindWhisper/Resources/icon_widget@2x.png" width="128" height="128" alt="WindWhisper">
+  <img src="docs/appicon-source.png" width="128" height="128" alt="WindWhisper">
 </p>
 
 <p align="center">
@@ -11,6 +11,10 @@
 
 <p align="center">
   <a href="#english">English</a> · <a href="#中文">中文</a>
+</p>
+
+<p align="center">
+  <img src="docs/demo.gif" width="640" alt="WindWhisper demo">
 </p>
 
 ---
@@ -174,6 +178,7 @@ xcodebuild -project WindWhisper.xcodeproj -scheme WindWhisper -configuration Rel
 
 ## 致谢
 
+- 视觉设计:**吴贤** —— App 图标、悬浮球、状态栏图标
 - [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) — 离线语音识别框架
 - [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) — 阿里多语种语音识别模型
 - [whisper.cpp](https://github.com/ggerganov/whisper.cpp) — OpenAI Whisper 的 C/C++ 移植
@@ -279,6 +284,10 @@ curl -L -o WindWhisper/Resources/sensevoice/tokens.txt \
 xcodegen generate
 xcodebuild -project WindWhisper.xcodeproj -scheme WindWhisper -configuration Release build
 ```
+
+### Credits
+
+- Visual design: **Wu Xian (吴贤)** — app icon, floating bubble, status bar icon
 
 ### License
 
